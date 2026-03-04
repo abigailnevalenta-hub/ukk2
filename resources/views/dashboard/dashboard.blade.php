@@ -10,28 +10,28 @@
         <div class="card">
             <div class="card-icon total"><i class="fas fa-file"></i></div>
             <h3>Total Pengaduan</h3>
-            <p style="font-size: 28px; font-weight: 700;">4 Laporan</p>
+            <p style="font-size: 28px; font-weight: 700;">{{ $total }} Laporan</p>
             <div class="card-desc">Semua laporan yang masuk</div>
         </div>
 
         <div class="card">
             <div class="card-icon pending"><i class="fas fa-clock"></i></div>
             <h3>Menunggu Proses</h3>
-            <p style="font-size: 28px; font-weight: 700;">4 Laporan</p>
+            <p style="font-size: 28px; font-weight: 700;">{{ $pending }} Laporan</p>
             <div class="card-desc">Belum ditindaklanjuti</div>
         </div>
 
         <div class="card">
             <div class="card-icon review"><i class="fas fa-tools"></i></div>
             <h3>Diperbaiki</h3>
-            <p style="font-size: 28px; font-weight: 700;">0 Laporan</p>
+            <p style="font-size: 28px; font-weight: 700;">{{ $review }} Laporan</p>
             <div class="card-desc">Dalam proses perbaikan</div>
         </div>
 
         <div class="card">
             <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
             <h3>Selesai Ditanganani</h3>
-            <p style="font-size: 28px; font-weight: 700;">0 Laporan</p>
+            <p style="font-size: 28px; font-weight: 700;">{{ $completed }} Laporan</p>
             <div class="card-desc">Sudah diperbaiki</div>
         </div>
     </section>
@@ -58,72 +58,50 @@
                     <th>Kelas</th>
                     <th>Kategori Sarana</th>
                     <th>Lokasi Spesifik</th>
+                    <th>Detail</th>
                     <th>Tanggal Lapor</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Non quia molestias v</td>
-                    <td>abigail.nevalenta48</td>
-                    <td>XII RPL 1</td>
-                    <td>Vel in sint ipsa ip</td>
-                    <td>Numquam e</td>
-                    <td>20/02/2026</td>
-                    <td><span class="status-pending">Menunggu</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sed quam ea rem dict</td>
-                    <td>abigail.nevalenta48</td>
-                    <td>XII RPL 1</td>
-                    <td>Mollit non occaecat</td>
-                    <td>Quisquam voluptatem</td>
-                    <td>20/02/2026</td>
-                    <td><span class="status-pending">Menunggu</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>LP-002</td>
-                    <td>abigail.nevalenta48</td>
-                    <td>XII RPL 1</td>
-                    <td>Architecto est eius</td>
-                    <td>kos</td>
-                    <td>19/02/2026</td>
-                    <td><span class="status-pending">Menunggu</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>P-01</td>
-                    <td>abigail.nevalenta48</td>
-                    <td>XII RPL 1</td>
-                    <td>Toilet</td>
-                    <td>Sekolah</td>
-                    <td>17/02/2026</td>
-                    <td><span class="status-pending">Menunggu</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </td>
-                </tr>
+                @forelse($pengaduans as $item)
+                    <tr>
+                        <td>{{ $item->kode }}</td>
+                        <td>{{ $item->pelapor }}</td>
+                        <td>{{ $item->kelas }}</td>
+                        <td>{{ $item->sarana }}</td>
+                        <td>{{ $item->lokasi }}</td>
+                        <td>{{ \Illuminate\Support\Str::limit($item->detail ?? '-', 100) }}</td>
+                        <td>{{ $item->created_at->format('d/m/Y') }}</td>
+                        <td>
+                            @if ($item->status == 'Menunggu')
+                                <span class="status-pending">Menunggu</span>
+                            @elseif($item->status == 'Diperbaiki')
+                                <span class="status-review">Diperbaiki</span>
+                            @elseif($item->status == 'Selesai')
+                                <span class="status-completed">Selesai</span>
+                            @else
+                                <span class="status-pending">{{ $item->status }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn delete" title="Hapus" data-id="{{ $item->id }}"
+                                    data-kode="{{ $item->kode }}" data-sarana="{{ $item->sarana }}"
+                                    data-lokasi="{{ $item->lokasi }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn view" data-id="{{ $item->id }}"><i
+                                        class="fas fa-eye"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Belum ada pengaduan</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </section>
@@ -134,9 +112,7 @@
     @include('pengaduan.read')
 
     <!-- Modal Delete Pengaduan -->
-    @isset($pengaduan)
-        @include('pengaduan.delete')
-    @endisset
+    @include('pengaduan.delete')
 @endpush
 
 @push('scripts')
@@ -144,37 +120,52 @@
         // View button functionality
         document.querySelectorAll('.action-btn.view').forEach(btn => {
             btn.addEventListener('click', function() {
-                // Sample data - replace dengan data dari database nanti
-                const sampleData = {
-                    title: 'Laporan Kerusakan Kursi Kelas',
-                    date: '03 Maret 2026',
-                    kode: 'LP-2026-001',
-                    kelas: 'X RPL 1',
-                    sarana: 'Kursi',
-                    lokasi: 'Lab RPL 1, Ruang 10',
-                    detail: 'Kursi di bagian depan kelas sudah rusak, bagian sandaran belakang patah dan mengganggu kenyamanan siswa saat belajar.',
-                    status: 'Menunggu',
-                    statusClass: 'pending',
-                    file: {
-                        name: 'laporan_kerusakan_kursi.pdf',
-                        size: '2.45 MB'
-                    }
-                };
-                openDetailModal(sampleData);
+                const id = this.getAttribute('data-id');
+
+                fetch(`/pengaduan/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const sampleData = {
+                            title: data.sarana,
+                            date: new Date(data.created_at).toLocaleDateString('id-ID', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            }),
+                            kode: data.kode,
+                            kelas: data.kelas,
+                            sarana: data.sarana,
+                            lokasi: data.lokasi,
+                            detail: data.detail || 'Tidak ada detail',
+                            status: data.status,
+                            statusClass: data.status === 'Menunggu' ? 'pending' : (data.status ===
+                                'Diperbaiki' ? 'review' : 'completed'),
+                            file: {
+                                name: data.foto || 'Tidak ada file',
+                                size: '2.45 MB'
+                            }
+                        };
+                        openDetailModal(sampleData);
+                    });
             });
         });
 
         // Delete button functionality
         document.querySelectorAll('.action-btn.delete').forEach(btn => {
             btn.addEventListener('click', function() {
-                // Sample data - replace dengan data dari database nanti
-                const deleteData = {
-                    kode: 'LP-2026-001',
-                    sarana: 'Kursi',
-                    lokasi: 'Lab RPL 1, Ruang 10',
-                    action: '#' // Set ke route delete yang sesuai
-                };
-                openDeleteModal(deleteData);
+                const id = this.getAttribute('data-id');
+
+                fetch(`/pengaduan/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const deleteData = {
+                            kode: data.kode,
+                            sarana: data.sarana,
+                            lokasi: data.lokasi,
+                            action: `/pengaduan/${id}`
+                        };
+                        openDeleteModal(deleteData);
+                    });
             });
         });
     </script>

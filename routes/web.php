@@ -2,12 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Models\Pengaduan;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.page');
 Route::post('/login', [LoginController::class, 'store'])->name('login');
 
 Route::get('/dashboard', function () {
-    return view('dashboard.dashboard');
+    $pengaduans = Pengaduan::all();
+    $total = $pengaduans->count();
+    $pending = $pengaduans->where('status', 'Menunggu')->count();
+    $review = $pengaduans->where('status', 'Diperbaiki')->count();
+    $completed = $pengaduans->where('status', 'Selesai')->count();
+    
+    return view('dashboard.dashboard', compact('pengaduans', 'total', 'pending', 'review', 'completed'));
 })->name('dashboard');
 
 Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class);

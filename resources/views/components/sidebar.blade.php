@@ -8,8 +8,7 @@
                 <a href="{{ route('dashboard') }}" class="menu-link"><i class="fas fa-home"></i>Dashboard</a>
             </li>
             <li class="{{ request()->routeIs('pengaduan.*') ? 'active' : '' }}">
-                <a href="{{ route('pengaduan.index') }}" class="menu-link"><i class="fas fa-file-alt"></i>Data
-                    Pengaduan</a>
+                <a href="{{ route('pengaduan.index') }}" class="menu-link"><i class="fas fa-file-alt"></i>Data Pengaduan</a>
             </li>
             <li class="{{ request()->routeIs('tanggapan') ? 'active' : '' }}">
                 <a href="{{ route('tanggapan') }}" class="menu-link"><i class="fas fa-comments"></i>Tanggapan</a>

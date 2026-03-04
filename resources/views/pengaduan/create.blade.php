@@ -89,7 +89,7 @@
 @push('styles')
     <style>
         .form-section {
-            max-width: 900px;
+            max-width: 780px;
             background: var(--bg-card);
             padding: 40px;
             border-radius: 20px;

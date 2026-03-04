@@ -120,7 +120,7 @@
 
         /* Sidebar */
         .sidebar {
-            width: 205px;
+            width: 210px;
             background: var(--bg-sidebar);
             padding: 24px 16px;
             box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
@@ -138,12 +138,16 @@
             margin-bottom: 32px;
         }
 
+        .menu-section {
+            margin-bottom: 24px;
+        }
+
         .menu-label {
             font-size: 11px;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 2px;
             margin-bottom: 12px;
             padding: 0 12px;
         }
@@ -151,14 +155,19 @@
         .menu li {
             padding: 12px 16px;
             border-radius: 12px;
-            margin-bottom: 4px;
+            margin-bottom: 12px;
             cursor: pointer;
             color: var(--text-sidebar);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-link {
+            color: inherit;
+            text-decoration: none;
+            width: 100%;
             display: flex;
             align-items: center;
-            font-size: 14px;
-            gap: 12px;
+            gap: 12px; /* spacing between icon and text */
         }
 
         .menu li i {
@@ -189,6 +198,7 @@
             width: 100%;
             display: flex;
             align-items: center;
+            gap: 12px; /* reduce distance between icon & text */
         }
 
         .menu {
@@ -314,16 +324,29 @@
             box-shadow: var(--shadow-hover);
         }
 
+
         .card h3 {
             font-size: 13px;
             color: var(--text-muted);
+            margin: 0;
             margin-bottom: 8px;
+            font-weight: 500;
         }
+
 
         .card p {
             color: var(--text-main);
+            margin-bottom: 4px;
         }
 
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+
+        
         /* Sections */
         .table-section {
             background: var(--bg-card);
@@ -407,27 +430,27 @@
         /* Actions */
         .filter-btn {
             padding: 8px 16px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--primary);
             border-radius: 8px;
-            background: var(--bg-card);
-            color: var(--text-sidebar);
-            font-weight: 500;
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            transition: 0.2s;
+            transition: 0.15s ease;
         }
 
         .filter-btn i {
-            color: var(--primary);
+            color: #ffffff;
         }
 
         .filter-btn:hover {
-            background: var(--bg-table-head);
-            border-color: var(--primary);
-            color: var(--primary);
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: #ffffff;
         }
 
         .card-icon {
@@ -460,6 +483,69 @@
         .card-icon.completed {
             background: var(--icon-completed-bg);
             color: var(--icon-completed-color);
+        }
+
+        /* Status badges (small colored dot + text to the right) */
+        .status-pending,
+        .status-review,
+        .status-completed,
+        .status-repair,
+        .status-done {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            background: transparent;
+        }
+
+        .status-pending {
+            background: var(--icon-pending-bg);
+            color: var(--icon-pending-color);
+        }
+
+        .status-pending::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--icon-pending-color);
+            display: inline-block;
+        }
+
+        .status-review,
+        .status-repair {
+            background: var(--icon-review-bg);
+            color: var(--icon-review-color);
+        }
+
+        .status-review::before,
+        .status-repair::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--icon-review-color);
+            display: inline-block;
+        }
+
+        .status-completed,
+        .status-done {
+            background: var(--icon-completed-bg);
+            color: var(--icon-completed-color);
+        }
+
+        .status-completed::before,
+        .status-done::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--icon-completed-color);
+            display: inline-block;
         }
 
         /* Actions */

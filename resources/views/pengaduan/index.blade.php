@@ -29,10 +29,12 @@
             <thead>
                 <tr>
                     <th>Kode Lapor</th>
-                    <th>Pelapor</th>
+                    <th>Nama Pelapor</th>
                     <th>Kelas</th>
                     <th>Kategori Sarana</th>
                     <th>Lokasi Spesifik</th>
+                    <th>Detail</th>
+                    <th>Tanggal Lapor</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -45,6 +47,9 @@
                         <td>{{ $neva->kelas }}</td>
                         <td>{{ $neva->sarana }}</td>
                         <td>{{ $neva->lokasi }}</td>
+                        <td>{{ \Illuminate\Support\Str::limit($neva->detail ?? '-', 100) }}</td>
+                        <td>{{ $neva->created_at->format('d/m/Y') }}</td>
+                    
                         <td>
                             @if ($neva->status == 'Menunggu')
                                 <span class="status-pending">{{ $neva->status }}</span>
