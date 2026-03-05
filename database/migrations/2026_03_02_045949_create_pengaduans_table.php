@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('kelas');
             $table->string('sarana');
             $table->string('lokasi');
+            $table->text('detail')->nullable();
+            $table->date('tanggal');
+            $table->string('foto')->nullable();
+            $table->enum('status', ['Menunggu', 'Diperbaiki', 'Selesai'])->default('Menunggu');
             $table->timestamps();    
 
         });

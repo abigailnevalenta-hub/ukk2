@@ -182,13 +182,13 @@
         </form>
     </div>
 
-    {{-- <div class="divider"><span>or</span></div>
+    <!-- {{-- <div class="divider"><span>or</span></div>
 
   <button class="google-btn"><i class="fab fa-google"></i>Sign Up with Google</button>
 
   <div class="signup">
     Have an account? <a href="#">Sign Up</a>
-  </div> --}}
+  </div> --}} -->
     <script>
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');

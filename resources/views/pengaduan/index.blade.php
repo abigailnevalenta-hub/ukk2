@@ -49,7 +49,7 @@
                         <td>{{ $neva->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($neva->detail ?? '-', 100) }}</td>
                         <td>{{ $neva->created_at->format('d/m/Y') }}</td>
-                    
+
                         <td>
                             @if ($neva->status == 'Menunggu')
                                 <span class="status-pending">{{ $neva->status }}</span>
@@ -61,12 +61,24 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn view" title="Lihat Detail" data-id="{{ $neva->id }}">
+                                <button class="action-btn view" data-id="{{ $neva->id }}"
+                                    data-kode="{{ $neva->kode }}" data-pelapor="{{ $neva->pelapor }}"
+                                    data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
+                                    data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                    data-status="{{ $neva->status }}"
+                                    data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button class="action-btn edit" title="Edit" data-id="{{ $neva->id }}">
+
+                                <button class="action-btn edit" data-id="{{ $neva->id }}"
+                                    data-kode="{{ $neva->kode }}" data-pelapor="{{ $neva->pelapor }}"
+                                    data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
+                                    data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                    data-status="{{ $neva->status }}"
+                                    data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
+
                                 <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
                                     data-kode="{{ $neva->kode }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}">
@@ -97,41 +109,18 @@
         // View button functionality
         document.querySelectorAll('.action-btn.view').forEach(btn => {
             btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                fetch(`/pengaduan/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const sampleData = {
-                            // title: 'Detail Pengaduan',
-                            // date: new Date(data.created_at).toLocaleDateString('id-ID', {
-                            //     day: 'numeric',
-                            //     month: 'long',
-                            //     year: 'numeric'
-                            // }),
-                            kode: data.kode,
-                            pelapor: data.pelapor,
-                            kelas: data.kelas,
-                            sarana: data.sarana,
-                            lokasi: data.lokasi,
-                            detail: data.detail || '-',
-                            tanggal: new Date(data.created_at).toLocaleDateString('id-ID', {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric'
-                            }),
-                            status: data.status,
-                            statusClass: data.status === 'Selesai' ? 'done' : (data.status ===
-                                'Proses' || data.status === 'Diperbaiki' ? 'repair' : 'pending'
-                            ),
-                            file: data.foto ? {
-                                name: data.foto,
-                                url: `/storage/fotos/${data.foto}`,
-                                size: 'Klik untuk lihat'
-                            } : null,
-                            id: data.id
-                        };
-                        openDetailModal(sampleData);
-                    });
+                const viewData = {
+                    id: this.getAttribute('data-id'),
+                    kode: this.getAttribute('data-kode'),
+                    pelapor: this.getAttribute('data-pelapor'),
+                    kelas: this.getAttribute('data-kelas'),
+                    sarana: this.getAttribute('data-sarana'),
+                    lokasi: this.getAttribute('data-lokasi'),
+                    detail: this.getAttribute('data-detail') || '-',
+                    tanggal: this.getAttribute('data-tanggal'),
+                    status: this.getAttribute('data-status')
+                };
+                window.openDetailModal(viewData);
             });
         });
 
@@ -139,25 +128,16 @@
         document.querySelectorAll('.action-btn.edit').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                fetch(`/pengaduan/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const editData = {
-                            kode: data.kode,
-                            pelapor: data.pelapor,
-                            kelas: data.kelas,
-                            sarana: data.sarana,
-                            lokasi: data.lokasi,
-                            detail: data.detail || '',
-                            tanggal: new Date(data.created_at).toLocaleDateString('id-ID', {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric'
-                            }),
-                            action: `/pengaduan/${id}`
-                        };
-                        openEditModal(editData);
-                    });
+                const editData = {
+                    kode: this.getAttribute('data-kode'),
+                    pelapor: this.getAttribute('data-pelapor'),
+                    kelas: this.getAttribute('data-kelas'),
+                    sarana: this.getAttribute('data-sarana'),
+                    lokasi: this.getAttribute('data-lokasi'),
+                    detail: this.getAttribute('data-detail') || '',
+                    action: `/pengaduan/${id}`
+                };
+                window.openEditModal(editData);
             });
         });
 
@@ -171,7 +151,7 @@
                     lokasi: this.getAttribute('data-lokasi'),
                     action: `/pengaduan/${id}`
                 };
-                openDeleteModal(deleteData);
+                window.openDeleteModal(deleteData);
             });
         });
     </script>

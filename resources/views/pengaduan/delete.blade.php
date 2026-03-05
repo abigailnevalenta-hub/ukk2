@@ -6,20 +6,21 @@
             <button class="modal-close" id="closeDeleteModal">&times;</button>
         </div>
 
-        <div class="modal-body">
-            <div class="delete-icon">
+        <div class="modal-body" style="text-align: center; padding: 36px 32px;">
+            <div class="delete-icon-wrap">
                 <i class="fas fa-exclamation-triangle"></i>
             </div>
-
-            <h3>Apakah Anda yakin ingin menghapus?</h3>
-
-            <p class="delete-warning">Tindakan ini tidak dapat dibatalkan. Data pengaduan akan dihapus secara permanen.
-            </p>
+            <h2 class="delete-title">Yakin ingin menghapus laporan ini?</h2>
+            <div id="deleteInfo" class="delete-info-box"></div>
+            <p class="delete-warning-text">Tindakan ini tidak dapat dibatalkan. Pastikan Anda benar-benar ingin
+                menghapus laporan ini.</p>
 
         </div>
 
-        <div class="modal-footer">
-            <button class="btn btn-secondary" id="closeDeleteBtn">Batal</button>
+        <div class="modal-footer" style="justify-content: end; gap: 12px;">
+            {{-- <button class="btn btn-secondary" id="closeEditBtn">
+                <i class="fas fa-times"></i> Batal
+            </button> --}}
             <form id="deleteForm" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
@@ -28,234 +29,95 @@
                 </button>
             </form>
         </div>
-
     </div>
 </div>
 
 <style>
-    /* ============================= */
-    /* DELETE MODAL STYLES */
-    /* ============================= */
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        animation: fadeIn 0.3s ease-in;
-    }
-
-    .modal.active {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .modal-content {
-        background-color: var(--bg-card);
-        padding: 0;
-        border-radius: 20px;
-        box-shadow: var(--shadow-hover);
-        max-width: 550px;
-        width: 95%;
-        animation: slideIn 0.3s ease-out;
-    }
-
+    /* Delete Modal Specific */
     .delete-modal-content {
-        max-width: 500px;
+        max-width: 460px;
     }
 
-    @keyframes slideIn {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
+    .delete-icon-wrap {
+        font-size: 60px;
+        color: #EF4444;
+        margin-bottom: 18px;
+        animation: shakeIcon 0.5s ease 0.1s both;
+    }
+
+    @keyframes shakeIcon {
+
+        0%,
+        100% {
+            transform: rotate(0deg);
         }
 
-        to {
-            transform: translateY(0);
-            opacity: 1;
+        20% {
+            transform: rotate(-8deg);
+        }
+
+        60% {
+            transform: rotate(8deg);
         }
     }
 
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 24px 32px;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--bg-card);
+    .delete-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--text-main, #111827);
+        margin: 0 0 14px 0;
     }
 
-    .modal-header h2 {
-        font-size: 20px;
-        color: var(--text-main);
-        margin: 0;
-    }
-
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 28px;
-        color: var(--text-muted);
-        cursor: pointer;
-        padding: 0;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.2s;
-    }
-
-    .modal-close:hover {
-        color: var(--primary);
-    }
-
-    .modal-body {
-        padding: 32px;
-        text-align: center;
-    }
-
-    .delete-icon {
-        font-size: 64px;
-        color: #FF4757;
-        margin-bottom: 24px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .modal-body h3 {
-        font-size: 20px;
-        color: var(--text-main);
-        margin: 0 0 12px 0;
-        font-weight: 600;
-    }
-
-    .delete-warning {
-        font-size: 14px;
-        color: var(--text-muted);
-        margin: 0 0 32px 0;
-        line-height: 1.6;
-    }
-
-    .modal-footer {
-        padding: 24px 32px;
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        background: var(--bg-card);
-    }
-
-    /* ============================= */
-    /* BUTTONS */
-    /* ============================= */
-
-    .btn {
-        padding: 10px 20px;
-        border: none;
+    .delete-info-box {
+        background: #FFF5F5;
+        border: 1px solid #FECACA;
         border-radius: 10px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        padding: 12px 16px;
+        margin: 0 auto 16px;
+        font-size: 13px;
+        color: #7f1d1d;
+        display: none;
+        text-align: left;
+        max-width: 340px;
     }
 
-    .btn-secondary {
-        background: var(--bg-table-head);
-        color: var(--text-sidebar);
+    .delete-info-box.visible {
+        display: block;
     }
 
-    .btn-secondary:hover {
-        background: var(--border-color);
-    }
-
-    .btn-danger {
-        background: #FF4757;
-        color: #ffffff;
-    }
-
-    .btn-danger:hover {
-        background: #ff5e6c;
-    }
-
-    /* ============================= */
-    /* RESPONSIVE MODAL */
-    /* ============================= */
-
-    @media (max-width: 768px) {
-        .modal-content {
-            width: 95%;
-        }
-
-        .modal-header,
-        .modal-body,
-        .modal-footer {
-            padding: 16px 20px;
-        }
-
-        .delete-icon {
-            font-size: 48px;
-        }
-
-        .modal-body h3 {
-            font-size: 18px;
-        }
-
-        .modal-footer {
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            font-size: 12px;
-        }
+    .delete-warning-text {
+        font-size: 13.5px;
+        color: var(--text-muted, #9ca3af);
+        line-height: 1.65;
+        margin: 0;
     }
 </style>
 
 <script>
-    // Modal functionality
     const deleteModal = document.getElementById('deleteModal');
     const closeDeleteModal = document.getElementById('closeDeleteModal');
     const closeDeleteBtn = document.getElementById('closeDeleteBtn');
 
-    // Close modal when X button is clicked
-    closeDeleteModal.addEventListener('click', () => {
-        deleteModal.classList.remove('active');
-    });
-
-    // Close modal when Cancel button is clicked
-    closeDeleteBtn.addEventListener('click', () => {
-        deleteModal.classList.remove('active');
-    });
-
-    // Close modal when clicking outside
+    closeDeleteModal.addEventListener('click', () => deleteModal.classList.remove('active'));
+    closeDeleteBtn.addEventListener('click', () => deleteModal.classList.remove('active'));
     deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) {
-            deleteModal.classList.remove('active');
-        }
+        if (e.target === deleteModal) deleteModal.classList.remove('active');
     });
 
-    // Function to open delete modal with data
     function openDeleteModal(data) {
-        // Set form action if provided
+        const infoBox = document.getElementById('deleteInfo');
+
+        if (data.kode || data.sarana) {
+            infoBox.classList.add('visible');
+            infoBox.innerHTML = `
+            <strong>Kode:</strong> ${data.kode || '-'}<br>
+            <strong>Sarana:</strong> ${data.sarana || '-'}<br>
+            <strong>Lokasi:</strong> ${data.lokasi || '-'}
+        `;
+        } else {
+            infoBox.classList.remove('visible');
+        }
+
         if (data.action) {
             document.getElementById('deleteForm').action = data.action;
         }
@@ -263,6 +125,5 @@
         deleteModal.classList.add('active');
     }
 
-    // Expose function globally
     window.openDeleteModal = openDeleteModal;
 </script>

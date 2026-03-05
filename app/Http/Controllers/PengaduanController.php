@@ -47,27 +47,26 @@ class PengaduanController extends Controller
         return response()->json($pengaduan);
     }
 
-    public function update(Request $request, $id)
-    {
-        $pengaduan = Pengaduan::findOrFail($id);
-        
-        $validatedData = $request->validate([
-            'pelapor' => 'required',
-            'kelas' => 'required',
-            'sarana' => 'required',
-            'lokasi' => 'string|nullable',
-            'detail' => 'string|nullable',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-        ]);
+   public function update(Request $request, $id)
+{
 
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('public/fotos');
-            $validatedData['foto'] = basename($fotoPath);
-        }
+    $pengaduan = Pengaduan::findOrFail($id);
 
-        $pengaduan->update($validatedData);
-        return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil diperbarui!');
-    }
+    $pengaduan->update([
+
+        'pelapor' => $request->pelapor,
+        'kelas' => $request->kelas,
+        'sarana' => $request->sarana,
+        'lokasi' => $request->lokasi,
+        'detail' => $request->detail
+
+    ]);
+
+    return redirect()
+        ->route('pengaduan.index')
+        ->with('success','Laporan berhasil diperbarui');
+
+}
 
     public function destroy($id)
     {

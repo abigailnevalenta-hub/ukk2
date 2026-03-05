@@ -87,13 +87,36 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn delete" title="Hapus" data-id="{{ $item->id }}"
-                                    data-kode="{{ $item->kode }}" data-sarana="{{ $item->sarana }}"
+                                <button class="action-btn view" title="Lihat Detail"
+                                    data-id="{{ $item->id }}"
+                                    data-kode="{{ $item->kode }}"
+                                    data-pelapor="{{ $item->pelapor }}"
+                                    data-kelas="{{ $item->kelas }}"
+                                    data-sarana="{{ $item->sarana }}"
+                                    data-lokasi="{{ $item->lokasi }}"
+                                    data-detail="{{ $item->detail }}"
+                                    data-status="{{ $item->status }}"
+                                    data-tanggal="{{ $item->created_at->format('d F Y') }}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn edit" title="Edit"
+                                    data-id="{{ $item->id }}"
+                                    data-kode="{{ $item->kode }}"
+                                    data-pelapor="{{ $item->pelapor }}"
+                                    data-kelas="{{ $item->kelas }}"
+                                    data-sarana="{{ $item->sarana }}"
+                                    data-lokasi="{{ $item->lokasi }}"
+                                    data-detail="{{ $item->detail }}"
+                                    data-status="{{ $item->status }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" title="Hapus"
+                                    data-id="{{ $item->id }}"
+                                    data-kode="{{ $item->kode }}"
+                                    data-sarana="{{ $item->sarana }}"
                                     data-lokasi="{{ $item->lokasi }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                                <button class="action-btn view" data-id="{{ $item->id }}"><i
-                                        class="fas fa-eye"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -111,6 +134,9 @@
     <!-- Modal Detail Pengaduan -->
     @include('pengaduan.read')
 
+    <!-- Modal Edit Pengaduan -->
+    @include('pengaduan.update')
+
     <!-- Modal Delete Pengaduan -->
     @include('pengaduan.delete')
 @endpush
@@ -120,33 +146,35 @@
         // View button functionality
         document.querySelectorAll('.action-btn.view').forEach(btn => {
             btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
+                const viewData = {
+                    id: this.getAttribute('data-id'),
+                    kode: this.getAttribute('data-kode'),
+                    pelapor: this.getAttribute('data-pelapor'),
+                    kelas: this.getAttribute('data-kelas'),
+                    sarana: this.getAttribute('data-sarana'),
+                    lokasi: this.getAttribute('data-lokasi'),
+                    detail: this.getAttribute('data-detail') || '-',
+                    tanggal: this.getAttribute('data-tanggal'),
+                    status: this.getAttribute('data-status')
+                };
+                window.openDetailModal(viewData);
+            });
+        });
 
-                fetch(`/pengaduan/${id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const sampleData = {
-                            title: data.sarana,
-                            date: new Date(data.created_at).toLocaleDateString('id-ID', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            }),
-                            kode: data.kode,
-                            kelas: data.kelas,
-                            sarana: data.sarana,
-                            lokasi: data.lokasi,
-                            detail: data.detail || 'Tidak ada detail',
-                            status: data.status,
-                            statusClass: data.status === 'Menunggu' ? 'pending' : (data.status ===
-                                'Diperbaiki' ? 'review' : 'completed'),
-                            file: {
-                                name: data.foto || 'Tidak ada file',
-                                size: '2.45 MB'
-                            }
-                        };
-                        openDetailModal(sampleData);
-                    });
+        // Edit button functionality
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const editData = {
+                    kode: this.getAttribute('data-kode'),
+                    pelapor: this.getAttribute('data-pelapor'),
+                    kelas: this.getAttribute('data-kelas'),
+                    sarana: this.getAttribute('data-sarana'),
+                    lokasi: this.getAttribute('data-lokasi'),
+                    detail: this.getAttribute('data-detail') || '',
+                    action: `/pengaduan/${id}`
+                };
+                window.openEditModal(editData);
             });
         });
 
@@ -154,18 +182,13 @@
         document.querySelectorAll('.action-btn.delete').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-
-                fetch(`/pengaduan/${id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const deleteData = {
-                            kode: data.kode,
-                            sarana: data.sarana,
-                            lokasi: data.lokasi,
-                            action: `/pengaduan/${id}`
-                        };
-                        openDeleteModal(deleteData);
-                    });
+                const deleteData = {
+                    kode: this.getAttribute('data-kode'),
+                    sarana: this.getAttribute('data-sarana'),
+                    lokasi: this.getAttribute('data-lokasi'),
+                    action: `/pengaduan/${id}`
+                };
+                window.openDeleteModal(deleteData);
             });
         });
     </script>
