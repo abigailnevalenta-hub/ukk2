@@ -19,8 +19,11 @@ class LoginController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        // For now, we'll just redirect to dashboard
-        // In a real application, you would verify credentials against the database
-        return redirect()->route('dashboard');
+        if(\Auth::attempt($validated)){
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
+        }
+
+        return redirect()->route('login.page')->withErrors(['email' => 'Invalid credentials']);
     }
 }

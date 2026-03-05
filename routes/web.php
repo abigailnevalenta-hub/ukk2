@@ -7,15 +7,7 @@ use App\Models\Pengaduan;
 Route::get('/', [LoginController::class, 'index'])->name('login.page');
 Route::post('/login', [LoginController::class, 'store'])->name('login');
 
-Route::get('/dashboard', function () {
-    $pengaduans = Pengaduan::all();
-    $total = $pengaduans->count();
-    $pending = $pengaduans->where('status', 'Menunggu')->count();
-    $review = $pengaduans->where('status', 'Diperbaiki')->count();
-    $completed = $pengaduans->where('status', 'Selesai')->count();
-    
-    return view('dashboard.dashboard', compact('pengaduans', 'total', 'pending', 'review', 'completed'));
-})->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('auth','role:admin');
 
 Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class);
 

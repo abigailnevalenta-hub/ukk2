@@ -53,11 +53,10 @@
                         <td>{{ $neva->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($neva->detail ?? '-', 100) }}</td>
                         <td>{{ $neva->created_at->format('d/m/Y') }}</td>
-
                         <td>
-                            @if ($neva->status == 'Menunggu')
+                            @if ($neva->status == 'menunggu')
                                 <span class="status-pending">{{ $neva->status }}</span>
-                            @elseif($neva->status == 'Proses' || $neva->status == 'Diperbaiki')
+                            @elseif($neva->status == 'diperbaiki' || $neva->status == 'Diperbaiki')
                                 <span class="status-repair">{{ $neva->status }}</span>
                             @else
                                 <span class="status-done">{{ $neva->status }}</span>

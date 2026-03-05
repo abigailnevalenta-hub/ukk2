@@ -46,7 +46,7 @@
                 </div>
                 <button class="filter-btn">
                     <i class="fas fa-filter"></i>
-                    Filter
+                    Filters
                 </button>
             </div>
         </div>
@@ -75,11 +75,11 @@
                         <td>{{ \Illuminate\Support\Str::limit($item->detail ?? '-', 100) }}</td>
                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
                         <td>
-                            @if ($item->status == 'Menunggu')
+                            @if ($item->status == 'menunggu')
                                 <span class="status-pending">Menunggu</span>
-                            @elseif($item->status == 'Diperbaiki')
+                            @elseif($item->status == 'diperbaiki')
                                 <span class="status-review">Diperbaiki</span>
-                            @elseif($item->status == 'Selesai')
+                            @elseif($item->status == 'selesai')
                                 <span class="status-completed">Selesai</span>
                             @else
                                 <span class="status-pending">{{ $item->status }}</span>

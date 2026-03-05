@@ -388,7 +388,7 @@
             outline: none;
             font-size: 14px;
         }
-
+        
         .search-wrapper {
             position: relative;
             display: flex;
