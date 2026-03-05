@@ -17,12 +17,16 @@
 
     <section class="table-section">
         <div class="table-header">
-            <h3>Semua Laporan</h3>
+            <h3>Semua Laporan Terbaru</h3>
             <div class="header-controls">
                 <div class="search-wrapper">
                     <i class="fas fa-search"></i>
                     <input type="text" class="search-box" placeholder="Cari laporan...">
                 </div>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i>
+                    Filter
+                </button>
             </div>
         </div>
         <table>

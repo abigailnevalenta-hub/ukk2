@@ -382,8 +382,8 @@
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 8px 12px 8px 36px;
-            border-radius: 8px;
+            padding: 12px 16px 12px 36px;
+            border-radius: 10px;
             width: 100%;
             outline: none;
             font-size: 14px;
@@ -429,9 +429,9 @@
         /* Action Colors */
         /* Actions */
         .filter-btn {
-            padding: 8px 16px;
+            padding: 12px 16px;
             border: 1px solid var(--primary);
-            border-radius: 8px;
+            border-radius: 10px;
             background: var(--primary);
             color: #ffffff;
             font-weight: 600;
@@ -439,7 +439,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
+            font-size: 14px;
             transition: 0.15s ease;
         }
 
