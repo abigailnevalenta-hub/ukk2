@@ -102,18 +102,23 @@
                     .then(response => response.json())
                     .then(data => {
                         const sampleData = {
-                            title: 'Detail Pengaduan',
-                            date: new Date(data.created_at).toLocaleDateString('id-ID', {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric'
-                            }),
+                            // title: 'Detail Pengaduan',
+                            // date: new Date(data.created_at).toLocaleDateString('id-ID', {
+                            //     day: 'numeric',
+                            //     month: 'long',
+                            //     year: 'numeric'
+                            // }),
                             kode: data.kode,
                             pelapor: data.pelapor,
                             kelas: data.kelas,
                             sarana: data.sarana,
                             lokasi: data.lokasi,
                             detail: data.detail || '-',
+                            tanggal: new Date(data.created_at).toLocaleDateString('id-ID', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            }),
                             status: data.status,
                             statusClass: data.status === 'Selesai' ? 'done' : (data.status ===
                                 'Proses' || data.status === 'Diperbaiki' ? 'repair' : 'pending'
@@ -144,6 +149,11 @@
                             sarana: data.sarana,
                             lokasi: data.lokasi,
                             detail: data.detail || '',
+                            tanggal: new Date(data.created_at).toLocaleDateString('id-ID', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            }),
                             action: `/pengaduan/${id}`
                         };
                         openEditModal(editData);
