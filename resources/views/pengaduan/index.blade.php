@@ -6,14 +6,63 @@
 @section('header_subtitle', 'Kelola data pengaduan masuk dari warga sekolah.')
 
 @section('content')
-    <div class="button" style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-        <a href="{{ route('pengaduan.create') }}" style="text-decoration: none;">
-            <button class="filter-btn" style="background: var(--primary); color: white; border: none;">
-                <i class="fas fa-plus"></i>
-                Buat Laporan Baru
-            </button>
-        </a>
-    </div>
+    <section class="filter-section">
+        <div class="filter-container">
+
+            <div class="filter-item">
+                <label>Tanggal</label>
+                <input type="date" class="filter-input">
+            </div>
+
+            <div class="filter-item">
+                <label>Bulan</label>
+                <select class="filter-input">
+                    <option value="">Semua Bulan</option>
+                    <option>Januari</option>
+                    <option>Februari</option>
+                    <option>Maret</option>
+                    <option>April</option>
+                    <option>Mei</option>
+                    <option>Juni</option>
+                    <option>Juli</option>
+                    <option>Agustus</option>
+                    <option>September</option>
+                    <option>Oktober</option>
+                    <option>November</option>
+                    <option>Desember</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label>Siswa</label>
+                <input type="text" placeholder="Cari nama siswa..." class="filter-input">
+            </div>
+
+            <div class="filter-item">
+                <label>Kategori Sarana</label>
+                <select class="filter-input">
+                    <option value="">Semua Kategori</option>
+                    <option value="Kursi">Kursi</option>
+                    <option value="Meja">Meja</option>
+                    <option value="Lampu">Lampu</option>
+                    <option value="Proyektor">Proyektor</option>
+                    <option value="AC">AC</option>
+                    <option value="Pintu">Pintu</option>
+                    <option value="Jendela">Jendela</option>
+                    <option value="Papan Tulis">Papan Tulis</option>
+                    <option value="Locker">Locker</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+
+            <div class="filter-action">
+                <button class="filter-btn">
+                    <i class="#"></i> Terapkan
+                </button>
+            </div>
+
+        </div>
+    </section>
 
     <section class="table-section">
         <div class="table-header">
@@ -23,10 +72,14 @@
                     <i class="fas fa-search"></i>
                     <input type="text" class="search-box" placeholder="Cari laporan...">
                 </div>
-                <button class="filter-btn">
-                    <i class="fas fa-filter"></i>
-                    Filter
-                </button>
+                <div class="button" style="display: flex; justify-content: flex-end; margin-bottom: 4px;">
+                    <a href="{{ route('pengaduan.create') }}" style="text-decoration: none;">
+                        <button class="filter-btn" style="background: var(--primary); color: white; border: none;">
+                            <i class="fas fa-plus"></i>
+                            Buat Laporan Baru
+                        </button>
+                    </a>
+                </div>
             </div>
         </div>
         <table>
