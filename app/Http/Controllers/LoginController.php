@@ -26,4 +26,6 @@ class LoginController extends Controller
 
         return redirect()->route('login.page')->withErrors(['email' => 'Invalid credentials']);
     }
+
+    
 }

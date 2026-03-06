@@ -32,7 +32,8 @@
         <table>
             <thead>
                 <tr>
-                    <th>Kode Lapor</th>
+                    <th>ID</th>
+                    <th>NISN</th>
                     <th>Nama Pelapor</th>
                     <th>Kelas</th>
                     <th>Kategori Sarana</th>
@@ -46,7 +47,8 @@
             <tbody>
                 @foreach ($nevas as $neva)
                     <tr>
-                        <td>{{ $neva->kode }}</td>
+                        <td>{{ $neva->id }}</td>
+                        <td>{{ $neva->nisn }}</td>
                         <td>{{ $neva->pelapor }}</td>
                         <td>{{ $neva->kelas }}</td>
                         <td>{{ $neva->sarana }}</td>
@@ -54,18 +56,18 @@
                         <td>{{ \Illuminate\Support\Str::limit($neva->detail ?? '-', 100) }}</td>
                         <td>{{ $neva->created_at->format('d/m/Y') }}</td>
                         <td>
-                            @if ($neva->status == 'menunggu')
+                            @if ($neva->status == 'Menunggu')
                                 <span class="status-pending">{{ $neva->status }}</span>
-                            @elseif($neva->status == 'diperbaiki' || $neva->status == 'Diperbaiki')
-                                <span class="status-repair">{{ $neva->status }}</span>
+                            @elseif($neva->status == 'Diperbaiki' || $neva->status == 'Diperbaiki')
+                                <span class="status-review">{{ $neva->status }}</span>
                             @else
-                                <span class="status-done">{{ $neva->status }}</span>
+                                <span class="status-completed">{{ $neva->status }}</span>
                             @endif
                         </td>
                         <td>
                             <div class="action-buttons">
                                 <button class="action-btn view" data-id="{{ $neva->id }}"
-                                    data-kode="{{ $neva->kode }}" data-pelapor="{{ $neva->pelapor }}"
+                                    data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
                                     data-status="{{ $neva->status }}"
@@ -74,7 +76,7 @@
                                 </button>
 
                                 <button class="action-btn edit" data-id="{{ $neva->id }}"
-                                    data-kode="{{ $neva->kode }}" data-pelapor="{{ $neva->pelapor }}"
+                                    data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
                                     data-status="{{ $neva->status }}"
@@ -83,7 +85,7 @@
                                 </button>
 
                                 <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
-                                    data-kode="{{ $neva->kode }}" data-sarana="{{ $neva->sarana }}"
+                                    data-nisn="{{ $neva->nisn }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -114,7 +116,7 @@
             btn.addEventListener('click', function() {
                 const viewData = {
                     id: this.getAttribute('data-id'),
-                    kode: this.getAttribute('data-kode'),
+                    nisn: this.getAttribute('data-nisn'),
                     pelapor: this.getAttribute('data-pelapor'),
                     kelas: this.getAttribute('data-kelas'),
                     sarana: this.getAttribute('data-sarana'),
@@ -132,7 +134,7 @@
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 const editData = {
-                    kode: this.getAttribute('data-kode'),
+                    nisn: this.getAttribute('data-nisn'),
                     pelapor: this.getAttribute('data-pelapor'),
                     kelas: this.getAttribute('data-kelas'),
                     sarana: this.getAttribute('data-sarana'),
@@ -149,7 +151,7 @@
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 const deleteData = {
-                    kode: this.getAttribute('data-kode'),
+                    nisn: this.getAttribute('data-nisn'),
                     sarana: this.getAttribute('data-sarana'),
                     lokasi: this.getAttribute('data-lokasi'),
                     action: `/pengaduan/${id}`

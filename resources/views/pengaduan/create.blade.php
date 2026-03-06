@@ -11,14 +11,14 @@
             @csrf
 
             <div class="form-group">
-                <div class="field full">
-                    <label for="kode_laporan">Kode Laporan</label>
-                    <input type="text" id="kode_laporan" name="kode" placeholder="Misal: LP 001" required>
+                <div class="field">
+                    <label for="nisn">NISN</label>
+                    <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="field full">
+                <div class="field">
                     <label for="pelapor">Nama Pelapor</label>
                     <input type="text" id="pelapor" name="pelapor" placeholder="Nama Lengkap Anda" required>
                 </div>
@@ -49,17 +49,22 @@
             </div>
 
             <div class="form-group">
-                <div class="field full">
+                <div class="field">
                     <label for="lokasi">Lokasi Spesifik</label>
-                    <input type="text" id="lokasi" name="lokasi" value="lokasi"
-                        placeholder="Misal: Lab RPL 1, Ruang 10">
+                    <input type="text" id="lokasi" name="lokasi" 
+                        placeholder="Misal: Gedung A, Lantai 2, kelas 12 RPL" required>
+                </div>
+                <div class="field">
+                    <label for="tanggal">Tanggal Laporan</label>
+                    <input type="date" id="tanggal" name="tanggal" required>
                 </div>
             </div>
+
 
             <div class="form-group">
                 <div class="field full">
                     <label for="detail">Detail Masalah</label>
-                    <textarea id="detail" name="detail" placeholder="Jelaskan kondisi kerusakan sarana..."></textarea>
+                    <textarea id="detail" name="detail" placeholder="Jelaskan kondisi kerusakan sarana..." required></textarea>
                 </div>
             </div>
 
@@ -73,7 +78,7 @@
                         <div class="upload-text">Seret foto Anda di sini, atau Telusuri</div>
                         <div class="upload-hint">Format yang didukung: jpg, jpeg, png, Max file size 5MB</div>
                     </div>
-                    <input type="file" id="fileInput" name="foto">
+                    <input type="file" id="fileInput" name="foto" accept="image/png, image/jpeg, image/jpg">
                 </div>
             </div>
 

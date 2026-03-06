@@ -1,41 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - PSS')
+@section('title', 'Menunggu Proses - PSS')
 
-@section('header_title', 'Dashboard')
-@section('header_subtitle', 'Selamat datang — ringkasan laporan terbaru ditampilkan di bawah')
+@section('header_title', 'Menunggu Proses')
+@section('header_subtitle', 'Halaman Menunggu Proses (comment test placeholder).')
 
 @section('content')
-    <section class="cards">
-        <div class="card">
-            <div class="card-icon total"><i class="fas fa-file"></i></div>
-            <h3>Total Pengaduan</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $total }} Laporan</p>
-            <div class="card-desc">Semua laporan yang masuk</div>
-        </div>
-
-        <div class="card">
-            <div class="card-icon pending"><i class="fas fa-clock"></i></div>
-            <h3>Menunggu Proses</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $pending }} Laporan</p>
-            <div class="card-desc">Belum ditindaklanjuti</div>
-        </div>
-
-        <div class="card">
-            <div class="card-icon review"><i class="fas fa-tools"></i></div>
-            <h3>Diperbaiki</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $review }} Laporan</p>
-            <div class="card-desc">Dalam proses perbaikan</div>
-        </div>
-
-        <div class="card">
-            <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
-            <h3>Selesai Ditanganani</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $completed }} Laporan</p>
-            <div class="card-desc">Sudah diperbaiki</div>
-        </div>
-    </section>
-
     <section class="filter-section">
         <div class="filter-container">
 

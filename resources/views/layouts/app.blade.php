@@ -120,7 +120,7 @@
 
         /* Sidebar */
         .sidebar {
-            width: 210px;
+            width: 250px;
             background: var(--bg-sidebar);
             padding: 24px 16px;
             box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
@@ -167,7 +167,8 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 12px; /* spacing between icon and text */
+            gap: 12px;
+            /* spacing between icon and text */
         }
 
         .menu li i {
@@ -198,7 +199,8 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 12px; /* reduce distance between icon & text */
+            gap: 12px;
+            /* reduce distance between icon & text */
         }
 
         .menu {
@@ -234,7 +236,7 @@
         /* Main Content */
         .main {
             flex: 1;
-            margin-left: 205px;
+            margin-left: 260px;
             padding: 24px 32px;
             min-width: 0;
         }
@@ -345,8 +347,65 @@
             margin-top: 8px;
         }
 
+        .filter-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
 
-        
+        .filter-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 16px;
+            align-items: end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-item label {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #666;
+        }
+
+        .filter-input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #4A90E2;
+        }
+
+        .filter-action {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .filter-apply {
+            padding: 10px 20px;
+            border: none;
+            background: #4A90E2;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter-apply:hover {
+            background: #357ABD;
+        }
+
+
+
         /* Sections */
         .table-section {
             background: var(--bg-card);
@@ -388,7 +447,7 @@
             outline: none;
             font-size: 14px;
         }
-        
+
         .search-wrapper {
             position: relative;
             display: flex;

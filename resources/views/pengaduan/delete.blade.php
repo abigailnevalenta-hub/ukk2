@@ -107,10 +107,10 @@
     function openDeleteModal(data) {
         const infoBox = document.getElementById('deleteInfo');
 
-        if (data.kode || data.sarana) {
+        if (data.nisn || data.sarana) {
             infoBox.classList.add('visible');
             infoBox.innerHTML = `
-            <strong>Kode:</strong> ${data.kode || '-'}<br>
+            <strong>nisn:</strong> ${data.nisn || '-'}<br>
             <strong>Sarana:</strong> ${data.sarana || '-'}<br>
             <strong>Lokasi:</strong> ${data.lokasi || '-'}
         `;

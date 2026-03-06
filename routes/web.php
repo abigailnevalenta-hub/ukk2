@@ -15,10 +15,16 @@ Route::get('/tanggapan', function () {
     return view('tanggapan.tanggapan');
 })->name('tanggapan');
 
-Route::get('/laporan', function () {
-    return view('laporan.laporan');
-})->name('laporan');
+Route::get('/menunggu', [App\Http\Controllers\PengaduanController::class, 'menunggu'])->name('menunggu');
 
-Route::get('/pengaturan', function () {
-    return view('pengaturan.pengaturan');
-})->name('pengaturan');
+Route::get('/diperbaiki', [App\Http\Controllers\PengaduanController::class, 'diperbaiki'])->name('diperbaiki');
+
+Route::get('/selesai', [App\Http\Controllers\PengaduanController::class, 'selesai'])->name('selesai');
+
+Route::get('/kategori', function () {
+    return view('kategori.kategori');
+})->name('kategori');
+
+
+
+

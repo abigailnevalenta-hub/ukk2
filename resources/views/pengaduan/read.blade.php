@@ -13,11 +13,11 @@
         </div>
 
         <div class="modal-body">
-            <!-- Row 1: Kode & Pelapor -->
+            <!-- Row 1: nisn & Pelapor -->
             <div class="detail-grid">
                 <div class="detail-field">
-                    <span class="detail-label">Kode Laporan</span>
-                    <div id="modalKode" class="detail-value">-</div>
+                    <span class="detail-label">NISN</span>
+                    <div id="modalnisn" class="detail-value">-</div>
                 </div>
                 <div class="detail-field">
                     <span class="detail-label">Nama Pelapor</span>
@@ -241,7 +241,7 @@
     function openDetailModal(data) {
         currentDetailData = data;
 
-        document.getElementById('modalKode').textContent = data.kode || '-';
+        document.getElementById('modalnisn').textContent = data.nisn || '-';
         document.getElementById('modalPelapor').textContent = data.pelapor || '-';
         document.getElementById('modalKelas').textContent = data.kelas || '-';
         document.getElementById('modalSarana').textContent = data.sarana || '-';
@@ -284,7 +284,7 @@
         if (!currentDetailData) return;
         detailModal.classList.remove('active');
         window.openDeleteModal({
-            kode: currentDetailData.kode,
+            nisn: currentDetailData.nisn,
             sarana: currentDetailData.sarana,
             lokasi: currentDetailData.lokasi,
             action: `/pengaduan/${currentDetailData.id}`

@@ -14,15 +14,15 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Row 1: Kode & Pelapor -->
+                <!-- Row 1: nisn & Pelapor -->
                 <div class="edit-row">
                     <div class="edit-field">
-                        <label for="modalKodeLaporan">
-                            <i class="#"></i> Kode Laporan
+                        <label for="modalnisnLaporan">
+                            <i class="#"></i> NISN
                         </label>
-                        <input type="text" id="modalKodeLaporan" name="kode" placeholder="Misal: LP-001" readonly
+                        <input type="text" id="modalnisnLaporan" name="nisn" placeholder="Misal: LP-001" readonly
                             class="input-readonly">
-                        <span class="field-hint">Kode laporan tidak dapat diubah</span>
+                        <span class="field-hint">nisn laporan tidak dapat diubah</span>
                     </div>
                     <div class="edit-field">
                         <label for="editPelapor">
@@ -535,7 +535,7 @@
     }
 
     function openEditModal(data) {
-        document.getElementById('modalKodeLaporan').value = data.kode || '';
+        document.getElementById('modalnisnLaporan').value = data.nisn || '';
         document.getElementById('editPelapor').value = data.pelapor || '';
         document.getElementById('editKelas').value = data.kelas || '';
         document.getElementById('editDetail').value = data.detail || '';

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pengaduan;
+use Illuminate\Http\Request;
 
 class PengaduanController extends Controller
 {
     public function index()
     {
         $nevas = Pengaduan::all();
+
         return view('pengaduan.index', compact('nevas'));
     }
 
@@ -21,7 +22,7 @@ class PengaduanController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'kode' => 'required|unique:pengaduans,kode',
+            'nisn' => 'required',
             'pelapor' => 'required',
             'kelas' => 'required',
             'sarana' => 'required',
@@ -29,7 +30,10 @@ class PengaduanController extends Controller
             'detail' => 'string|nullable',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
-            
+
+        // tambahkan tanggal otomatis
+        $validatedData['tanggal'] = now();
+
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('public/fotos');
             $validatedData['foto'] = basename($fotoPath);
@@ -38,42 +42,64 @@ class PengaduanController extends Controller
         $validatedData['status'] = 'Menunggu';
 
         Pengaduan::create($validatedData);
+
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dibuat!');
     }
 
     public function show($id)
     {
         $pengaduan = Pengaduan::findOrFail($id);
+
         return response()->json($pengaduan);
     }
 
-   public function update(Request $request, $id)
-{
+    public function update(Request $request, $id)
+    {
 
-    $pengaduan = Pengaduan::findOrFail($id);
+        $pengaduan = Pengaduan::findOrFail($id);
 
-    $pengaduan->update([
+        $pengaduan->update([
 
-        'pelapor' => $request->pelapor,
-        'kelas' => $request->kelas,
-        'sarana' => $request->sarana,
-        'lokasi' => $request->lokasi,
-        'detail' => $request->detail
+            'pelapor' => $request->pelapor,
+            'kelas' => $request->kelas,
+            'sarana' => $request->sarana,
+            'lokasi' => $request->lokasi,
+            'detail' => $request->detail,
 
-    ]);
+        ]);
 
-    return redirect()
-        ->route('pengaduan.index')
-        ->with('success','Laporan berhasil diperbarui');
+        return redirect()
+            ->route('pengaduan.index')
+            ->with('success', 'Laporan berhasil diperbarui');
 
-}
+    }
 
     public function destroy($id)
     {
         $pengaduan = Pengaduan::findOrFail($id);
         $pengaduan->delete();
+
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dihapus!');
     }
+
+    public function menunggu()
+    {
+        $pengaduans = Pengaduan::where('status', 'Menunggu')->get();
+
+        return view('menunggu.menunggu', compact('pengaduans'));
+    }
+
+    public function diperbaiki()
+    {
+        $pengaduans = Pengaduan::where('status', 'Diperbaiki')->get();
+
+        return view('diperbaiki.diperbaiki', compact('pengaduans'));
+    }
+
+    public function selesai()
+    {
+        $pengaduans = Pengaduan::where('status', 'Selesai')->get();
+
+        return view('selesai.selesai', compact('pengaduans'));
+    }
 }
-
-
