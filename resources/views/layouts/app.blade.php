@@ -512,6 +512,18 @@
             color: #ffffff;
         }
 
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card-link:hover .card {
+            transform: translateY(-4px);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
         .card-icon {
             width: 48px;
             height: 48px;

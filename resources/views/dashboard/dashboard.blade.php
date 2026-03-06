@@ -7,6 +7,7 @@
 
 @section('content')
     <section class="cards">
+         <a href="{{ route('pengaduan.index') }}" class="card-link">
         <div class="card">
             <div class="card-icon total"><i class="fas fa-file"></i></div>
             <h3>Total Pengaduan</h3>
@@ -14,6 +15,7 @@
             <div class="card-desc">Semua laporan yang masuk</div>
         </div>
 
+            <a href="{{ route('menunggu') }}" class="card-link">
         <div class="card">
             <div class="card-icon pending"><i class="fas fa-clock"></i></div>
             <h3>Menunggu Proses</h3>
@@ -21,6 +23,7 @@
             <div class="card-desc">Belum ditindaklanjuti</div>
         </div>
 
+            <a href="{{ route('diperbaiki') }}" class="card-link">
         <div class="card">
             <div class="card-icon review"><i class="fas fa-tools"></i></div>
             <h3>Diperbaiki</h3>
@@ -28,6 +31,7 @@
             <div class="card-desc">Dalam proses perbaikan</div>
         </div>
 
+            <a href="{{ route('selesai') }}" class="card-link">
         <div class="card">
             <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
             <h3>Selesai Ditanganani</h3>
