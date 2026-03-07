@@ -1,51 +1,63 @@
 <!-- Detail Pengaduan Modal -->
 <div id="detailModal" class="modal">
     <div class="modal-content detail-modal-content">
+
+        <!-- HEADER -->
         <div class="modal-header">
             <div class="modal-header-info">
                 <h2 id="modalTitle">Detail Pengaduan</h2>
                 <div id="modalDate" class="modal-date"></div>
             </div>
+
             <div class="modal-header-actions">
                 <span id="modalStatus" class="detail-status status-pending">Menunggu</span>
                 <button class="modal-close" id="closeModal">&times;</button>
             </div>
         </div>
 
+        <!-- BODY -->
         <div class="modal-body">
-            <!-- Row 1: nisn & Pelapor -->
+
+            <!-- Row ID & NISN -->
             <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="detail-label">ID</span>
+                    <div id="modalId" class="detail-value">-</div>
+                </div>
+
                 <div class="detail-field">
                     <span class="detail-label">NISN</span>
                     <div id="modalnisn" class="detail-value">-</div>
                 </div>
+            </div>
+
+            <!-- Row Pelapor & Kelas -->
+            <div class="detail-grid">
                 <div class="detail-field">
                     <span class="detail-label">Nama Pelapor</span>
                     <div id="modalPelapor" class="detail-value">-</div>
                 </div>
-            </div>
 
-            <!-- Row 2: Kelas & Sarana -->
-            <div class="detail-grid">
                 <div class="detail-field">
                     <span class="detail-label">Kelas</span>
                     <div id="modalKelas" class="detail-value">-</div>
                 </div>
+            </div>
+
+            <!-- Row Sarana & Lokasi -->
+            <div class="detail-grid">
                 <div class="detail-field">
                     <span class="detail-label">Kategori Sarana</span>
                     <div id="modalSarana" class="detail-value">-</div>
                 </div>
-            </div>
 
-            <!-- Row 3: Lokasi -->
-            <div class="detail-grid detail-grid-full">
                 <div class="detail-field">
                     <span class="detail-label">Lokasi Spesifik</span>
                     <div id="modalLokasi" class="detail-value">-</div>
                 </div>
             </div>
 
-            <!-- Row 4: Detail Masalah -->
+            <!-- Detail Masalah -->
             <div class="detail-grid detail-grid-full">
                 <div class="detail-field">
                     <span class="detail-label">Detail Masalah</span>
@@ -53,41 +65,52 @@
                 </div>
             </div>
 
-             <!-- Row 4: Foto Laporan -->
-        <div class="detail-grid detail-grid-full">
-            <div class="detail-field">
-                <span class="detail-label">Foto Laporan</span>
-                <div class="detail-value detail-photo">
-                    <img id="modalFoto" src="" alt="Foto Pengaduan">
+            <!-- Foto Laporan -->
+            <div class="detail-grid detail-grid-full">
+                <div class="detail-field">
+                    <span class="detail-label">Foto Laporan</span>
+
+                    <div class="detail-photo">
+                        <img id="modalFoto" src="" alt="Foto Pengaduan">
+                    </div>
+
                 </div>
             </div>
-        </div>
 
         </div>
 
-       
+        <!-- FOOTER -->
         <div class="modal-footer">
             <button class="btn btn-secondary" id="closeDetailBtn">
                 <i class="fas fa-times"></i> Batal
             </button>
+
             <button class="btn btn-warning" id="modalEditBtn">
                 <i class="fas fa-edit"></i> Edit
             </button>
+
             <button class="btn btn-danger" id="modalDeleteBtn">
                 <i class="fas fa-trash"></i> Hapus
             </button>
         </div>
+
     </div>
 </div>
 
 <style>
-    /* ========================
-   DETAIL MODAL SPECIFIC
-   ======================== */
-
+    /* MODAL SIZE */
     .detail-modal-content {
-        max-width: 680px;
+        max-width: 720px;
         width: 95%;
+        padding: 32px;
+    }
+
+    /* HEADER */
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
     }
 
     .modal-header-info {
@@ -96,25 +119,23 @@
         gap: 4px;
     }
 
+    .modal-date {
+        font-size: 14px;
+        color: #9CA3AF;
+    }
+
     .modal-header-actions {
         display: flex;
         align-items: center;
         gap: 14px;
-        flex-shrink: 0;
-    }
-
-    .modal-date {
-        font-size: 13px;
-        color: var(--text-muted);
     }
 
     /* STATUS BADGE */
     .detail-status {
-        padding: 5px 14px;
+        padding: 6px 14px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
-        white-space: nowrap;
     }
 
     .status-pending {
@@ -132,12 +153,18 @@
         color: #22C55E;
     }
 
-    /* GRID LAYOUT */
+    /* BODY */
+    .modal-body {
+        margin-top: 10px;
+        padding-top: 24px;
+    }
+
+    /* GRID */
     .detail-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        margin-bottom: 22px;
+        gap: 28px;
+        margin-bottom: 26px;
     }
 
     .detail-grid-full {
@@ -145,64 +172,37 @@
     }
 
     /* FIELD */
+    .detail-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* LABEL */
     .detail-label {
-        display: block;
-        font-size: 11px;
-        color: var(--text-muted);
+        font-size: 12px;
+        color: #9CA3AF;
         text-transform: uppercase;
         font-weight: 600;
         letter-spacing: 0.5px;
-        margin-bottom: 6px;
     }
 
+    /* VALUE */
     .detail-value {
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 500;
-        color: var(--text-main);
-        background: var(--bg-body, #f9fafb);
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--border-color, #e5e7eb);
-        min-height: 42px;
-        word-break: break-word;
+        color: #1F2937;
     }
 
-    .detail-value.detail-text {
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.65;
-        min-height: 80px;
+    /* TEXT DETAIL */
+    .detail-text {
+        line-height: 1.7;
+        max-width: 600px;
     }
 
-    /* ========================
-   BUTTON COLORS
-   ======================== */
-    .btn-warning {
-        background: linear-gradient(135deg, #FB923C, #F97316);
-        color: #ffffff;
-    }
-
-    .btn-warning:hover {
-        background: linear-gradient(135deg, #f97316, #ea6b10);
-    }
-
-    /* ========================
-   RESPONSIVE
-   ======================== */
-    @media (max-width: 600px) {
-        .detail-grid {
-            grid-template-columns: 1fr;
-            gap: 14px;
-        }
-
-        .modal-header-actions {
-            gap: 10px;
-        }
-    }
-
-    /* FOTO LAPORAN */
+    /* FOTO */
     .detail-photo {
-        padding: 8px;
+        margin-top: 8px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -213,7 +213,27 @@
         max-height: 260px;
         border-radius: 10px;
         object-fit: cover;
-        border: 1px solid var(--border-color, #e5e7eb);
+        border: 1px solid #E5E7EB;
+    }
+
+    /* BUTTON */
+    .btn-warning {
+        background: linear-gradient(135deg, #FB923C, #F97316);
+        color: #fff;
+    }
+
+    .btn-warning:hover {
+        background: linear-gradient(135deg, #f97316, #ea6b10);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:600px) {
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
     }
 </style>
 
@@ -239,8 +259,10 @@
     let currentDetailData = null;
 
     function openDetailModal(data) {
+
         currentDetailData = data;
 
+        document.getElementById('modalId').textContent = data.id || '-';
         document.getElementById('modalnisn').textContent = data.nisn || '-';
         document.getElementById('modalPelapor').textContent = data.pelapor || '-';
         document.getElementById('modalKelas').textContent = data.kelas || '-';
@@ -249,18 +271,22 @@
         document.getElementById('modalDetail').textContent = data.detail || '-';
         document.getElementById('modalDate').textContent = data.tanggal || '';
 
-        // const fotoEl = document.getElementById('modalFoto');
-        // if (data.foto) {
-        //     fotoEl.src = data.foto;
-        //     fotoEl.style.display = 'block';
-        // } else {
-        //     fotoEl.src = '';
-        //     fotoEl.style.display = 'none';
-        // }       
+        /* FOTO */
+        const fotoEl = document.getElementById('modalFoto');
 
+        if (data.foto) {
+            fotoEl.src = data.foto;
+            fotoEl.style.display = 'block';
+        } else {
+            fotoEl.style.display = 'none';
+        }
+
+        /* STATUS */
         const statusEl = document.getElementById('modalStatus');
+
         statusEl.textContent = data.status || 'Menunggu';
         statusEl.className = 'detail-status';
+
         if (data.status === 'Menunggu') {
             statusEl.classList.add('status-pending');
         } else if (data.status === 'Proses' || data.status === 'Diperbaiki') {
@@ -270,25 +296,34 @@
         }
 
         detailModal.classList.add('active');
+
     }
 
-    // Tombol Edit di detail modal → buka edit modal
+    /* EDIT */
     document.getElementById('modalEditBtn').addEventListener('click', () => {
+
         if (!currentDetailData) return;
+
         detailModal.classList.remove('active');
+
         window.openEditModal(currentDetailData);
+
     });
 
-    // Tombol Hapus di detail modal → buka delete modal
+    /* DELETE */
     document.getElementById('modalDeleteBtn').addEventListener('click', () => {
+
         if (!currentDetailData) return;
+
         detailModal.classList.remove('active');
+
         window.openDeleteModal({
             nisn: currentDetailData.nisn,
             sarana: currentDetailData.sarana,
             lokasi: currentDetailData.lokasi,
             action: `/pengaduan/${currentDetailData.id}`
         });
+
     });
 
     window.openDetailModal = openDetailModal;

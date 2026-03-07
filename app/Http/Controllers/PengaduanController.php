@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 
 class PengaduanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $nevas = Pengaduan::all();
+        $query = Pengaduan::query();
+
+        if ($request->search) {
+            $query->where('pelapor', 'like', '%'.$request->search.'%')
+                ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                ->orWhere('kelas', 'like', '%'.$request->search.'%')
+                ->orWhere('sarana', 'like', '%'.$request->search.'%');
+        }
+
+        $nevas = $query->get();
 
         return view('pengaduan.index', compact('nevas'));
     }
@@ -40,7 +49,6 @@ class PengaduanController extends Controller
         }
 
         $validatedData['status'] = 'Menunggu';
-
         Pengaduan::create($validatedData);
 
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dibuat!');
@@ -57,7 +65,6 @@ class PengaduanController extends Controller
     {
 
         $pengaduan = Pengaduan::findOrFail($id);
-
         $pengaduan->update([
 
             'pelapor' => $request->pelapor,
@@ -82,23 +89,41 @@ class PengaduanController extends Controller
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dihapus!');
     }
 
-    public function menunggu()
+    public function menunggu(Request $request)
     {
-        $pengaduans = Pengaduan::where('status', 'Menunggu')->get();
+        $query = Pengaduan::where('status', 'Menunggu');
+        if ($request->search) {
+            $query->where('pelapor', 'like', '%'.$request->search.'%')
+                ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                ->orWhere('kelas', 'like', '%'.$request->search.'%');
+        }
+        $pengaduans = $query->get();
 
         return view('menunggu.menunggu', compact('pengaduans'));
     }
 
-    public function diperbaiki()
+    public function diperbaiki(Request $request)
     {
-        $pengaduans = Pengaduan::where('status', 'Diperbaiki')->get();
+        $query = Pengaduan::where('status', 'Diperbaiki');
+        if ($request->search) {
+            $query->where('pelapor', 'like', '%'.$request->search.'%')
+                ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                ->orWhere('kelas', 'like', '%'.$request->search.'%');
+        }
+        $pengaduans = $query->get();
 
         return view('diperbaiki.diperbaiki', compact('pengaduans'));
     }
 
-    public function selesai()
+    public function selesai(Request $request)
     {
-        $pengaduans = Pengaduan::where('status', 'Selesai')->get();
+        $query = Pengaduan::where('status', 'Selesai');
+        if ($request->search) {
+            $query->where('pelapor', 'like', '%'.$request->search.'%')
+                ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                ->orWhere('kelas', 'like', '%'.$request->search.'%');
+        }
+        $pengaduans = $query->get();
 
         return view('selesai.selesai', compact('pengaduans'));
     }

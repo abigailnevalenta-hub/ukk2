@@ -96,12 +96,24 @@
 <script>
     const deleteModal = document.getElementById('deleteModal');
     const closeDeleteModal = document.getElementById('closeDeleteModal');
-    const closeDeleteBtn = document.getElementById('closeDeleteBtn');
 
-    closeDeleteModal.addEventListener('click', () => deleteModal.classList.remove('active'));
-    closeDeleteBtn.addEventListener('click', () => deleteModal.classList.remove('active'));
+    // tombol X
+    closeDeleteModal.addEventListener('click', () => {
+        deleteModal.classList.remove('active');
+    });
+
+    // klik area luar modal
     deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) deleteModal.classList.remove('active');
+        if (!e.target.closest('.modal-content')) {
+            deleteModal.classList.remove('active');
+        }
+    });
+
+    // tombol ESC untuk menutup modal
+    document.addEventListener('keydown', function(e){
+        if(e.key === "Escape"){
+            deleteModal.classList.remove('active');
+        }
     });
 
     function openDeleteModal(data) {
@@ -110,10 +122,10 @@
         if (data.nisn || data.sarana) {
             infoBox.classList.add('visible');
             infoBox.innerHTML = `
-            <strong>nisn:</strong> ${data.nisn || '-'}<br>
-            <strong>Sarana:</strong> ${data.sarana || '-'}<br>
-            <strong>Lokasi:</strong> ${data.lokasi || '-'}
-        `;
+                <strong>NISN:</strong> ${data.nisn || '-'}<br>
+                <strong>Sarana:</strong> ${data.sarana || '-'}<br>
+                <strong>Lokasi:</strong> ${data.lokasi || '-'}
+            `;
         } else {
             infoBox.classList.remove('visible');
         }

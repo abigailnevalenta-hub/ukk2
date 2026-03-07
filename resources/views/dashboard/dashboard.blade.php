@@ -7,105 +7,114 @@
 
 @section('content')
     <section class="cards">
-         <a href="{{ route('pengaduan.index') }}" class="card-link">
-        <div class="card">
-            <div class="card-icon total"><i class="fas fa-file"></i></div>
-            <h3>Total Pengaduan</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $total }} Laporan</p>
-            <div class="card-desc">Semua laporan yang masuk</div>
-        </div>
+        <a href="{{ route('pengaduan.index') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon total"><i class="fas fa-file"></i></div>
+                <h3>Total Pengaduan</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $total }} Laporan</p>
+                <div class="card-desc">Semua laporan yang masuk</div>
+            </div>
+        </a>
 
-            <a href="{{ route('menunggu') }}" class="card-link">
-        <div class="card">
-            <div class="card-icon pending"><i class="fas fa-clock"></i></div>
-            <h3>Menunggu Proses</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $pending }} Laporan</p>
-            <div class="card-desc">Belum ditindaklanjuti</div>
-        </div>
+        <a href="{{ route('menunggu') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon pending"><i class="fas fa-clock"></i></div>
+                <h3>Menunggu Proses</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $pending }} Laporan</p>
+                <div class="card-desc">Belum ditindaklanjuti</div>
+            </div>
+        </a>
 
-            <a href="{{ route('diperbaiki') }}" class="card-link">
-        <div class="card">
-            <div class="card-icon review"><i class="fas fa-tools"></i></div>
-            <h3>Diperbaiki</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $review }} Laporan</p>
-            <div class="card-desc">Dalam proses perbaikan</div>
-        </div>
+        <a href="{{ route('diperbaiki') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon review"><i class="fas fa-tools"></i></div>
+                <h3>Diperbaiki</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $review }} Laporan</p>
+                <div class="card-desc">Dalam proses perbaikan</div>
+            </div>
+        </a>
 
-            <a href="{{ route('selesai') }}" class="card-link">
-        <div class="card">
-            <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
-            <h3>Selesai Ditanganani</h3>
-            <p style="font-size: 28px; font-weight: 700;">{{ $completed }} Laporan</p>
-            <div class="card-desc">Sudah diperbaiki</div>
-        </div>
+        <a href="{{ route('selesai') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
+                <h3>Selesai Ditanganani</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $completed }} Laporan</p>
+                <div class="card-desc">Sudah diperbaiki</div>
+            </div>
+        </a>
     </section>
 
     <section class="filter-section">
-        <div class="filter-container">
+        <form method="GET" action="{{ route('dashboard') }}">
+            <div class="filter-container">
 
-            <div class="filter-item">
-                <label>Tanggal</label>
-                <input type="date" class="filter-input">
+                <div class="filter-item">
+                    <label>Tanggal</label>
+                    <input type="date" class="filter-input">
+                </div>
+
+                <div class="filter-item">
+                    <label>Bulan</label>
+                    <select class="filter-input">
+                        <option value="">Semua Bulan</option>
+                        <option>Januari</option>
+                        <option>Februari</option>
+                        <option>Maret</option>
+                        <option>April</option>
+                        <option>Mei</option>
+                        <option>Juni</option>
+                        <option>Juli</option>
+                        <option>Agustus</option>
+                        <option>September</option>
+                        <option>Oktober</option>
+                        <option>November</option>
+                        <option>Desember</option>
+                    </select>
+                </div>
+
+                <div class="filter-item">
+                    <label>Siswa</label>
+                    <input type="text" placeholder="Cari nama siswa..." class="filter-input">
+                </div>
+
+                <div class="filter-item">
+                    <label>Kategori Sarana</label>
+                    <select class="filter-input">
+                        <option value="">Semua Kategori</option>
+                        <option value="Kursi">Kursi</option>
+                        <option value="Meja">Meja</option>
+                        <option value="Lampu">Lampu</option>
+                        <option value="Proyektor">Proyektor</option>
+                        <option value="AC">AC</option>
+                        <option value="Pintu">Pintu</option>
+                        <option value="Jendela">Jendela</option>
+                        <option value="Papan Tulis">Papan Tulis</option>
+                        <option value="Locker">Locker</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="filter-action">
+                    <button class="filter-btn">
+                        <i class="#"></i> Terapkan
+                    </button>
+                </div>
+
             </div>
-
-            <div class="filter-item">
-                <label>Bulan</label>
-                <select class="filter-input">
-                    <option value="">Semua Bulan</option>
-                    <option>Januari</option>
-                    <option>Februari</option>
-                    <option>Maret</option>
-                    <option>April</option>
-                    <option>Mei</option>
-                    <option>Juni</option>
-                    <option>Juli</option>
-                    <option>Agustus</option>
-                    <option>September</option>
-                    <option>Oktober</option>
-                    <option>November</option>
-                    <option>Desember</option>
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <label>Siswa</label>
-                <input type="text" placeholder="Cari nama siswa..." class="filter-input">
-            </div>
-
-            <div class="filter-item">
-                <label>Kategori Sarana</label>
-                <select class="filter-input">
-                    <option value="">Semua Kategori</option>
-                    <option value="Kursi">Kursi</option>
-                    <option value="Meja">Meja</option>
-                    <option value="Lampu">Lampu</option>
-                    <option value="Proyektor">Proyektor</option>
-                    <option value="AC">AC</option>
-                    <option value="Pintu">Pintu</option>
-                    <option value="Jendela">Jendela</option>
-                    <option value="Papan Tulis">Papan Tulis</option>
-                    <option value="Locker">Locker</option>
-                    <option value="Lainnya">Lainnya</option>
-                </select>
-            </div>
-
-            <div class="filter-action">
-                <button class="filter-btn">
-                    <i class="#"></i> Terapkan
-                </button>
-            </div>
-
-        </div>
+        </form>
     </section>
 
     <section class="table-section">
         <div class="table-header">
             <h3>Laporan Pengaduan Terbaru</h3>
             <div class="header-controls">
-                <div class="search-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="search-box" placeholder="Search here...">
-                </div>
+                <form method="GET" action="{{ route('dashboard') }}">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search" class="search-box" placeholder="Search here..."
+                            value="{{ request('search') }}">
+                    </div>
+                </form>
             </div>
         </div>
         <table>
@@ -172,7 +181,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Belum ada pengaduan</td>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Belum ada pengaduan
+                        </td>
                     </tr>
                 @endforelse
             </tbody>

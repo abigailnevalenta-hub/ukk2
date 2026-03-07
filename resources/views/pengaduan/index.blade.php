@@ -68,10 +68,13 @@
         <div class="table-header">
             <h3>Semua Laporan Terbaru</h3>
             <div class="header-controls">
-                <div class="search-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="search-box" placeholder="Cari laporan...">
-                </div>
+                <form method="GET" action="{{ route('pengaduan.index') }}">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search" class="search-box" placeholder="Search here..."
+                            value="{{ request('search') }}">
+                    </div>
+                </form>
                 <div class="button" style="display: flex; justify-content: flex-end; margin-bottom: 4px;">
                     <a href="{{ route('pengaduan.create') }}" style="text-decoration: none;">
                         <button class="filter-btn" style="background: var(--primary); color: white; border: none;">

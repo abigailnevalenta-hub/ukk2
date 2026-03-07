@@ -68,10 +68,13 @@
         <div class="table-header">
             <h3>Laporan Pengaduan Terbaru</h3>
             <div class="header-controls">
-                <div class="search-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="search-box" placeholder="Search here...">
-                </div>
+                <form method="GET" action="{{ route('menunggu') }}">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search" class="search-box" placeholder="Search here..."
+                            value="{{ request('search') }}">
+                    </div>
+                </form>
             </div>
         </div>
         <table>
