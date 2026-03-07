@@ -6,41 +6,42 @@
 @section('header_subtitle', 'Halaman Selesai Ditanganani (comment test placeholder).')
 
 @section('content')
-    <section class="filter-section">
+<section class="filter-section">
+    <form method="GET" action="{{ route('selesai') }}">
         <div class="filter-container">
 
             <div class="filter-item">
                 <label>Tanggal</label>
-                <input type="date" class="filter-input">
+                <input type="date" name="tanggal" class="filter-input">
             </div>
 
             <div class="filter-item">
                 <label>Bulan</label>
-                <select class="filter-input">
+                <select name="bulan" class="filter-input">
                     <option value="">Semua Bulan</option>
-                    <option>Januari</option>
-                    <option>Februari</option>
-                    <option>Maret</option>
-                    <option>April</option>
-                    <option>Mei</option>
-                    <option>Juni</option>
-                    <option>Juli</option>
-                    <option>Agustus</option>
-                    <option>September</option>
-                    <option>Oktober</option>
-                    <option>November</option>
-                    <option>Desember</option>
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
                 </select>
             </div>
 
             <div class="filter-item">
                 <label>Siswa</label>
-                <input type="text" placeholder="Cari nama siswa..." class="filter-input">
+                <input type="text" name="siswa" placeholder="Cari nama siswa..." class="filter-input">
             </div>
 
             <div class="filter-item">
                 <label>Kategori Sarana</label>
-                <select class="filter-input">
+                <select name="kategori" class="filter-input">
                     <option value="">Semua Kategori</option>
                     <option value="Kursi">Kursi</option>
                     <option value="Meja">Meja</option>
@@ -56,13 +57,14 @@
             </div>
 
             <div class="filter-action">
-                <button class="filter-btn">
-                    <i class="#"></i> Terapkan
+                <button type="submit" class="filter-btn">
+                    Terapkan
                 </button>
             </div>
 
         </div>
-    </section>
+    </form>
+</section>
 
     <section class="table-section">
         <div class="table-header">
@@ -139,7 +141,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Belum ada pengaduan</td>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Data pengaduan tidak ditemukan
+                        </td>
                     </tr>
                 @endforelse
             </tbody>

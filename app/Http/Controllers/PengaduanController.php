@@ -11,14 +11,37 @@ class PengaduanController extends Controller
     {
         $query = Pengaduan::query();
 
+        // SEARCH
         if ($request->search) {
-            $query->where('pelapor', 'like', '%'.$request->search.'%')
-                ->orWhere('nisn', 'like', '%'.$request->search.'%')
-                ->orWhere('kelas', 'like', '%'.$request->search.'%')
-                ->orWhere('sarana', 'like', '%'.$request->search.'%');
+            $query->where(function ($q) use ($request) {
+                $q->where('pelapor', 'like', '%'.$request->search.'%')
+                    ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                    ->orWhere('kelas', 'like', '%'.$request->search.'%')
+                    ->orWhere('sarana', 'like', '%'.$request->search.'%');
+            });
         }
 
-        $nevas = $query->get();
+        // FILTER TANGGAL
+        if ($request->tanggal) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        // FILTER BULAN
+        if ($request->bulan) {
+            $query->whereMonth('tanggal', $request->bulan);
+        }
+
+        // FILTER SISWA
+        if ($request->siswa) {
+            $query->where('pelapor', 'like', '%'.$request->siswa.'%');
+        }
+
+        // FILTER KATEGORI SARANA
+        if ($request->kategori) {
+            $query->where('sarana', $request->kategori);
+        }
+
+        $nevas = $query->latest()->get();
 
         return view('pengaduan.index', compact('nevas'));
     }
@@ -92,12 +115,32 @@ class PengaduanController extends Controller
     public function menunggu(Request $request)
     {
         $query = Pengaduan::where('status', 'Menunggu');
-        if ($request->search) {
-            $query->where('pelapor', 'like', '%'.$request->search.'%')
-                ->orWhere('nisn', 'like', '%'.$request->search.'%')
-                ->orWhere('kelas', 'like', '%'.$request->search.'%');
+
+        if ($request->tanggal) {
+            $query->whereDate('created_at', $request->tanggal);
         }
-        $pengaduans = $query->get();
+
+        if ($request->bulan) {
+            $query->whereMonth('created_at', $request->bulan);
+        }
+
+        if ($request->siswa) {
+            $query->where('pelapor', 'like', '%'.$request->siswa.'%');
+        }
+
+        if ($request->kategori) {
+            $query->where('sarana', $request->kategori);
+        }
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('pelapor', 'like', '%'.$request->search.'%')
+                    ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                    ->orWhere('kelas', 'like', '%'.$request->search.'%');
+            });
+        }
+
+        $pengaduans = $query->latest()->get();
 
         return view('menunggu.menunggu', compact('pengaduans'));
     }
@@ -105,12 +148,38 @@ class PengaduanController extends Controller
     public function diperbaiki(Request $request)
     {
         $query = Pengaduan::where('status', 'Diperbaiki');
+
+        // SEARCH
         if ($request->search) {
-            $query->where('pelapor', 'like', '%'.$request->search.'%')
-                ->orWhere('nisn', 'like', '%'.$request->search.'%')
-                ->orWhere('kelas', 'like', '%'.$request->search.'%');
+            $query->where(function ($q) use ($request) {
+                $q->where('pelapor', 'like', '%'.$request->search.'%')
+                    ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                    ->orWhere('kelas', 'like', '%'.$request->search.'%')
+                    ->orWhere('sarana', 'like', '%'.$request->search.'%');
+            });
         }
-        $pengaduans = $query->get();
+
+        // FILTER TANGGAL
+        if ($request->tanggal) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        // FILTER BULAN
+        if ($request->bulan) {
+            $query->whereMonth('tanggal', $request->bulan);
+        }
+
+        // FILTER SISWA
+        if ($request->siswa) {
+            $query->where('pelapor', 'like', '%'.$request->siswa.'%');
+        }
+
+        // FILTER KATEGORI
+        if ($request->kategori) {
+            $query->where('sarana', $request->kategori);
+        }
+
+        $pengaduans = $query->latest()->get();
 
         return view('diperbaiki.diperbaiki', compact('pengaduans'));
     }
@@ -118,12 +187,38 @@ class PengaduanController extends Controller
     public function selesai(Request $request)
     {
         $query = Pengaduan::where('status', 'Selesai');
+
+        // SEARCH
         if ($request->search) {
-            $query->where('pelapor', 'like', '%'.$request->search.'%')
-                ->orWhere('nisn', 'like', '%'.$request->search.'%')
-                ->orWhere('kelas', 'like', '%'.$request->search.'%');
+            $query->where(function ($q) use ($request) {
+                $q->where('pelapor', 'like', '%'.$request->search.'%')
+                    ->orWhere('nisn', 'like', '%'.$request->search.'%')
+                    ->orWhere('kelas', 'like', '%'.$request->search.'%')
+                    ->orWhere('sarana', 'like', '%'.$request->search.'%');
+            });
         }
-        $pengaduans = $query->get();
+
+        // FILTER TANGGAL
+        if ($request->tanggal) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        // FILTER BULAN
+        if ($request->bulan) {
+            $query->whereMonth('tanggal', $request->bulan);
+        }
+
+        // FILTER SISWA
+        if ($request->siswa) {
+            $query->where('pelapor', 'like', '%'.$request->siswa.'%');
+        }
+
+        // FILTER KATEGORI
+        if ($request->kategori) {
+            $query->where('sarana', $request->kategori);
+        }
+
+        $pengaduans = $query->latest()->get();
 
         return view('selesai.selesai', compact('pengaduans'));
     }
