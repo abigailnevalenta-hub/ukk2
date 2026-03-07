@@ -60,7 +60,21 @@
                     </div>
                 </div>
 
-                <!-- Row 3: Lokasi -->
+                <!-- Row 3: Status -->
+                <div class="edit-row edit-row-full">
+                    <div class="edit-field">
+                        <label for="editStatus">
+                            Status Laporan
+                        </label>
+                        <select id="editStatus" name="status" required>
+                            <option value="Menunggu">Menunggu</option>
+                            <option value="Diperbaiki">Diperbaiki</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 4: Lokasi -->
                 <div class="edit-row edit-row-full">
                     <div class="edit-field">
                         <label for="editLokasi">
@@ -70,7 +84,7 @@
                     </div>
                 </div>
 
-                <!-- Row 4: Detail -->
+                <!-- Row 5: Detail -->
                 <div class="edit-row edit-row-full">
                     <div class="edit-field">
                         <label for="editDetail">
@@ -80,7 +94,7 @@
                     </div>
                 </div>
 
-                <!-- Row 5: Upload Foto -->
+                <!-- Row 6: Upload Foto -->
                 <div class="edit-row edit-row-full">
                     <div class="edit-field">
                         <label>
@@ -467,113 +481,170 @@
 </style>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+
     const editModal = document.getElementById('editModal');
     const closeEditModal = document.getElementById('closeEditModal');
     const closeEditBtn = document.getElementById('closeEditBtn');
     const submitEditBtn = document.getElementById('submitEditBtn');
 
-    closeEditModal.addEventListener('click', () => editModal.classList.remove('active'));
-    closeEditBtn.addEventListener('click', () => editModal.classList.remove('active'));
-    editModal.addEventListener('click', (e) => {
-        if (e.target === editModal) editModal.classList.remove('active');
+    if(!editModal) return;
+
+    // =========================
+    // CLOSE MODAL
+    // =========================
+    closeEditModal?.addEventListener('click', () => {
+        editModal.classList.remove('active');
     });
 
-    // File Upload
+    closeEditBtn?.addEventListener('click', () => {
+        editModal.classList.remove('active');
+    });
+
+    editModal.addEventListener('click', (e) => {
+        if (e.target === editModal) {
+            editModal.classList.remove('active');
+        }
+    });
+
+    // =========================
+    // FILE UPLOAD
+    // =========================
+    const uploadArea = document.getElementById('modalUploadArea');
+    const fileInput = document.getElementById('modalFileInput');
+
     function initEditUpload() {
-        const uploadArea = document.getElementById('modalUploadArea');
-        const fileInput = document.getElementById('modalFileInput');
+
         if (!uploadArea || !fileInput) return;
 
-        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.onclick = () => fileInput.click();
 
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleEditFile(e.target.files[0]);
-        });
+        fileInput.onchange = (e) => {
+            if (e.target.files.length > 0) {
+                handleEditFile(e.target.files[0]);
+            }
+        };
 
-        uploadArea.addEventListener('dragover', (e) => {
+        uploadArea.ondragover = (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
-        });
-        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-        uploadArea.addEventListener('drop', (e) => {
+        };
+
+        uploadArea.ondragleave = () => {
+            uploadArea.classList.remove('dragover');
+        };
+
+        uploadArea.ondrop = (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) handleEditFile(e.dataTransfer.files[0]);
-        });
+
+            if (e.dataTransfer.files.length > 0) {
+                handleEditFile(e.dataTransfer.files[0]);
+            }
+        };
     }
 
     function handleEditFile(file) {
-        const allowed = ['jpg', 'jpeg', 'png', 'gif'];
+
+        const allowed = ['jpg','jpeg','png','gif'];
         const ext = file.name.split('.').pop().toLowerCase();
+
         if (!allowed.includes(ext)) {
             alert('Hanya file gambar (JPG, JPEG, PNG, GIF) yang diperbolehkan!');
             return;
         }
+
         if (file.size > 5242880) {
-            alert('Ukuran file maksimal adalah 5MB!');
+            alert('Ukuran file maksimal 5MB!');
             return;
         }
-        const uploadArea = document.getElementById('modalUploadArea');
+
         uploadArea.innerHTML = `
-        <div class="upload-icon-wrap" style="color:#22c55e;">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="upload-text">${file.name}</div>
-        <div class="upload-hint">File berhasil dipilih · Klik untuk mengganti</div>
-    `;
+            <div class="upload-icon-wrap" style="color:#22c55e;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="upload-text">${file.name}</div>
+            <div class="upload-hint">File berhasil dipilih · Klik untuk mengganti</div>
+        `;
     }
 
     function resetUploadArea() {
-        const uploadArea = document.getElementById('modalUploadArea');
+
+        if(!uploadArea) return;
+
         uploadArea.innerHTML = `
-        <div class="upload-icon-wrap">
-            <i class="fas fa-cloud-upload-alt"></i>
-        </div>
-        <div class="upload-text">Seret foto ke sini atau <span class="upload-browse">telusuri</span></div>
-        <div class="upload-hint">Format: JPG, JPEG, PNG · Maks 5MB</div>
-    `;
+            <div class="upload-icon-wrap">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+                Seret foto ke sini atau <span class="upload-browse">telusuri</span>
+            </div>
+            <div class="upload-hint">
+                Format: JPG, JPEG, PNG · Maks 5MB
+            </div>
+        `;
     }
 
-    function openEditModal(data) {
+    // =========================
+    // OPEN MODAL
+    // =========================
+    window.openEditModal = function(data){
+
         document.getElementById('modalnisnLaporan').value = data.nisn || '';
         document.getElementById('editPelapor').value = data.pelapor || '';
         document.getElementById('editKelas').value = data.kelas || '';
         document.getElementById('editDetail').value = data.detail || '';
         document.getElementById('editLokasi').value = data.lokasi || '';
 
-        // Set selected option for sarana
+        // sarana
         const saranaSelect = document.getElementById('editSarana');
-        saranaSelect.value = data.sarana || '';
+        if(saranaSelect){
+            saranaSelect.value = data.sarana || '';
+        }
 
-        // Reset upload area
+        // status (jika ada)
+        const statusSelect = document.getElementById('editStatus');
+        if(statusSelect){
+            statusSelect.value = data.status || 'Menunggu';
+        }
+
+        // reset upload
         resetUploadArea();
         initEditUpload();
 
-        // Set form action
-        if (data.action) {
-            document.getElementById('editForm').action = data.action;
-        } else if (data.id) {
-            document.getElementById('editForm').action = `/pengaduan/${data.id}`;
+        // set form action
+        const form = document.getElementById('editForm');
+
+        if(data.action){
+            form.action = data.action;
+        }else if(data.id){
+            form.action = `/pengaduan/${data.id}`;
         }
 
         editModal.classList.add('active');
     }
 
-    submitEditBtn.addEventListener('click', () => {
+    // =========================
+    // SUBMIT FORM
+    // =========================
+    submitEditBtn?.addEventListener('click', () => {
+
         const form = document.getElementById('editForm');
-        // Validasi sederhana sebelum submit
         const pelapor = document.getElementById('editPelapor').value.trim();
         const sarana = document.getElementById('editSarana').value;
+
         if (!pelapor) {
             alert('Nama pelapor wajib diisi!');
             return;
         }
+
         if (!sarana) {
             alert('Kategori sarana wajib dipilih!');
             return;
         }
+
         form.submit();
     });
 
-    window.openEditModal = openEditModal;
+});
 </script>

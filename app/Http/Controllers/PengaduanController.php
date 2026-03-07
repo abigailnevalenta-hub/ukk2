@@ -95,13 +95,12 @@ class PengaduanController extends Controller
             'sarana' => $request->sarana,
             'lokasi' => $request->lokasi,
             'detail' => $request->detail,
+            'status' => $request->status,
+
 
         ]);
 
-        return redirect()
-            ->route('pengaduan.index')
-            ->with('success', 'Laporan berhasil diperbarui');
-
+        return redirect()->back()->with('success','Data berhasil diperbarui');
     }
 
     public function destroy($id)
