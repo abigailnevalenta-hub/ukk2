@@ -24,13 +24,13 @@
                 <a href="{{ route('selesai') }}" class="menu-link"><i class="fas fa-check-circle"></i>Selesai</a>
             </li>
 
-            <li class="{{ request()->routeIs('kategori') ? 'active' : '' }}">
-                <a href="{{ route('kategori') }}" class="menu-link"><i class="fas fa-tags"></i>Kategori</a>
-            </li>
-
-            <li class="{{ request()->routeIs('tanggapan') ? 'active' : '' }}">
+             <li class="{{ request()->routeIs('tanggapan') ? 'active' : '' }}">
                 <a href="{{ route('tanggapan') }}" class="menu-link"><i class="fas fa-comments"></i>Tanggapan</a>
             </li>
+
+            {{-- <li class="{{ request()->routeIs('kategori') ? 'active' : '' }}">
+                <a href="{{ route('kategori') }}" class="menu-link"><i class="fas fa-tags"></i>Kategori</a>
+            </li> --}}
            
         </ul>
     </div>

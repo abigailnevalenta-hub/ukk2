@@ -21,9 +21,9 @@ Route::get('/diperbaiki', [App\Http\Controllers\PengaduanController::class, 'dip
 
 Route::get('/selesai', [App\Http\Controllers\PengaduanController::class, 'selesai'])->name('selesai');
 
-Route::get('/kategori', function () {
-    return view('kategori.kategori');
-})->name('kategori');
+// Route::get('/kategori', function () {
+//     return view('kategori.kategori');
+// })->name('kategori');
 
 
 
