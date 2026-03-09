@@ -108,7 +108,7 @@ class PengaduanController extends Controller
         $pengaduan = Pengaduan::findOrFail($id);
         $pengaduan->delete();
 
-        return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dihapus!');
+        return redirect()->back()->with('success','Data berhasil dihapus');
     }
 
     public function menunggu(Request $request)

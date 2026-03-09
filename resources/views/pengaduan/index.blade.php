@@ -90,7 +90,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Nomor</th>
                     <th>NISN</th>
                     <th>Nama Pelapor</th>
                     <th>Kelas</th>
@@ -105,7 +105,7 @@
             <tbody>
                 @forelse ($nevas as $neva)
                     <tr>
-                        <td>{{ $neva->id }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $neva->nisn }}</td>
                         <td>{{ $neva->pelapor }}</td>
                         <td>{{ $neva->kelas }}</td>

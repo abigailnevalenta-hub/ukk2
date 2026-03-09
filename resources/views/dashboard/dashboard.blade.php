@@ -120,7 +120,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Nomor</th>
                     <th>NISN</th>
                     <th>Nama Pelapor</th>
                     <th>Kelas</th>
@@ -135,7 +135,7 @@
             <tbody>
                 @forelse($pengaduans as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->nisn }}</td>
                         <td>{{ $item->pelapor }}</td>
                         <td>{{ $item->kelas }}</td>
