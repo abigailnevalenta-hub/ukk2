@@ -4,47 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PengaduanController extends Controller
 {
-    public function index(Request $request)
-    {
+   public function index(Request $request)
+{
+    $user = Auth::user();
+
+    // ADMIN lihat semua
+    // SISWA hanya lihat pengaduannya sendiri
+    if ($user->role === 'admin') {
         $query = Pengaduan::query();
-
-        // SEARCH
-        if ($request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('pelapor', 'like', '%'.$request->search.'%')
-                    ->orWhere('nisn', 'like', '%'.$request->search.'%')
-                    ->orWhere('kelas', 'like', '%'.$request->search.'%')
-                    ->orWhere('sarana', 'like', '%'.$request->search.'%');
-            });
-        }
-
-        // FILTER TANGGAL
-        if ($request->tanggal) {
-            $query->whereDate('tanggal', $request->tanggal);
-        }
-
-        // FILTER BULAN
-        if ($request->bulan) {
-            $query->whereMonth('tanggal', $request->bulan);
-        }
-
-        // FILTER SISWA
-        if ($request->siswa) {
-            $query->where('pelapor', 'like', '%'.$request->siswa.'%');
-        }
-
-        // FILTER KATEGORI SARANA
-        if ($request->kategori) {
-            $query->where('sarana', $request->kategori);
-        }
-
-        $nevas = $query->latest()->get();
-
-        return view('pengaduan.index', compact('nevas'));
+    } else {
+        $query = Pengaduan::where('nisn', $user->nisn);
     }
+
+    // SEARCH
+    if ($request->search) {
+        $query->where(function ($q) use ($request) {
+            $q->where('pelapor', 'like', '%' . $request->search . '%')
+              ->orWhere('nisn', 'like', '%' . $request->search . '%')
+              ->orWhere('kelas', 'like', '%' . $request->search . '%')
+              ->orWhere('sarana', 'like', '%' . $request->search . '%');
+        });
+    }
+
+    // FILTER TANGGAL
+    if ($request->tanggal) {
+        $query->whereDate('created_at', $request->tanggal);
+    }
+
+    // FILTER BULAN
+    if ($request->bulan) {
+        $query->whereMonth('created_at', $request->bulan);
+    }
+
+    // FILTER SISWA (hanya admin)
+    if ($request->siswa && $user->role === 'admin') {
+        $query->where('pelapor', 'like', '%' . $request->siswa . '%');
+    }
+
+    // FILTER KATEGORI
+    if ($request->kategori) {
+        $query->where('sarana', $request->kategori);
+    }
+
+    $nevas = $query->latest()->get();
+
+    return view('pengaduan.index', compact('nevas'));
+}
 
     public function create()
     {

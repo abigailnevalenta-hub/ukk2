@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengaduan;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardSiswaController extends Controller
 {
     public function index(Request $request)
     {
-            {
-        $query = Pengaduan::query();
+        // ambil nisn siswa yang login
+        $nisn = Auth::user()->nisn;
+
+        $query = Pengaduan::where('nisn', $nisn);
 
         // SEARCH
         if ($request->search) {
@@ -24,17 +27,12 @@ class DashboardSiswaController extends Controller
 
         // FILTER TANGGAL
         if ($request->tanggal) {
-            $query->whereDate('tanggal', $request->tanggal);
+            $query->whereDate('created_at', $request->tanggal);
         }
 
         // FILTER BULAN
         if ($request->bulan) {
-            $query->whereMonth('tanggal', $request->bulan);
-        }
-
-        // FILTER SISWA
-        if ($request->siswa) {
-            $query->where('pelapor', 'like', '%' . $request->siswa . '%');
+            $query->whereMonth('created_at', $request->bulan);
         }
 
         // FILTER KATEGORI
@@ -44,11 +42,11 @@ class DashboardSiswaController extends Controller
 
         $pengaduans = $query->latest()->get();
 
-        // CARD DASHBOARD
-        $total = Pengaduan::count();
-        $pending = Pengaduan::where('status', 'Menunggu')->count();
-        $review = Pengaduan::where('status', 'Diperbaiki')->count();
-        $completed = Pengaduan::where('status', 'Selesai')->count();
+        // CARD DASHBOARD (hanya milik siswa ini)
+        $total = Pengaduan::where('nisn', $nisn)->count();
+        $pending = Pengaduan::where('nisn', $nisn)->where('status', 'Menunggu')->count();
+        $review = Pengaduan::where('nisn', $nisn)->where('status', 'Diperbaiki')->count();
+        $completed = Pengaduan::where('nisn', $nisn)->where('status', 'Selesai')->count();
 
         return view('dashboardSiswa.index', compact(
             'pengaduans',
@@ -58,5 +56,4 @@ class DashboardSiswaController extends Controller
             'completed'
         ));
     }
-}
 }
