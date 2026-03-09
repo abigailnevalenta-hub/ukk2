@@ -85,23 +85,25 @@ class PengaduanController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
+   {
+    $pengaduan = Pengaduan::findOrFail($id);
 
-        $pengaduan = Pengaduan::findOrFail($id);
-        $pengaduan->update([
+    $data = [
+        'pelapor' => $request->pelapor,
+        'kelas' => $request->kelas,
+        'sarana' => $request->sarana,
+        'lokasi' => $request->lokasi,
+        'detail' => $request->detail,
+    ];
 
-            'pelapor' => $request->pelapor,
-            'kelas' => $request->kelas,
-            'sarana' => $request->sarana,
-            'lokasi' => $request->lokasi,
-            'detail' => $request->detail,
-            'status' => $request->status,
-
-
-        ]);
-
-        return redirect()->back()->with('success','Data berhasil diperbarui');
+    // hanya admin boleh ubah status
+    if ($request->user() && $request->user()->role === 'admin') {
+    $data['status'] = $request->status;
     }
+    $pengaduan->update($data);
+
+    return back()->with('success','Pengaduan berhasil diperbarui');
+}
 
     public function destroy($id)
     {
@@ -116,11 +118,11 @@ class PengaduanController extends Controller
         $query = Pengaduan::where('status', 'Menunggu');
 
         if ($request->tanggal) {
-            $query->whereDate('created_at', $request->tanggal);
+            $query->whereDate('tanggal', $request->tanggal);
         }
 
         if ($request->bulan) {
-            $query->whereMonth('created_at', $request->bulan);
+            $query->whereMonth('tanggal', $request->bulan);
         }
 
         if ($request->siswa) {

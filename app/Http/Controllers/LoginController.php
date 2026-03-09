@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -13,19 +15,60 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the login input
-        $validated = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string|min:6',
-        ]);
+        if ($request->filled('email')) {
 
-        if(\Auth::attempt($validated)){
-            $request->session()->regenerate();
-            return redirect()->route('dashboard');
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
+
+            if (Auth::attempt([
+                'email' => $request->email,
+                'password' => $request->password
+            ])) {
+
+                $request->session()->regenerate();
+                return redirect()->route('dashboard');
+            }
+
+            return back()->withErrors([
+                'email' => 'Email atau password admin salah'
+            ]);
+        }
+        if ($request->filled('nisn')) {
+
+            $request->validate([
+                'nisn' => 'required'
+            ]);
+
+            $user = User::where('nisn', $request->nisn)
+                        ->where('role', 'user')
+                        ->first();
+
+            if ($user) {
+
+                Auth::login($user);
+                $request->session()->regenerate();
+
+                return redirect()->route('dashboardSiswa');
+            }
+
+            return back()->withErrors([
+                'nisn' => 'NISN tidak ditemukan'
+            ]);
         }
 
-        return redirect()->route('login.page')->withErrors(['email' => 'Invalid credentials']);
-    }
+        return back()->withErrors([
+            'login' => 'Data login tidak valid'
+        ]);
+    }   
 
-    
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login.page');
+    }
 }

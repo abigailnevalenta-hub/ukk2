@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login - Admin & Siswa</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
@@ -25,28 +24,55 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
-            width: 550px;
+            width: 100%;
+            max-width: 550px;
             background: #ffffff;
-            padding: 48px;
+            padding: 40px 48px;
             border-radius: 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 32px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .tab.active {
+            background: linear-gradient(90deg, #f97534, #ee5307);
+            color: white;
         }
 
         h1 {
             font-size: 28px;
             font-weight: 600;
             color: #242424;
+            text-align: center;
         }
 
         .subtitle {
             font-size: 16px;
             color: #919191;
-            margin-top: 8px;
-            margin-bottom: 32px;
+            text-align: center;
+            margin: 8px 0 32px;
         }
 
         .form-group {
@@ -78,10 +104,10 @@
         }
 
         .password-wrapper input {
-            padding-right: 45px;
+            padding-right: 50px;
         }
 
-        #togglePassword {
+        .toggle-password {
             position: absolute;
             right: 15px;
             top: 50%;
@@ -91,7 +117,7 @@
             font-size: 16px;
         }
 
-        #togglePassword:hover {
+        .toggle-password:hover {
             color: #ee5307;
         }
 
@@ -105,107 +131,110 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
-        /* .divider {
-  display: flex;
-  align-items: center;
-  margin: 28px 0;
-  color: #919191;
-  font-size: 14px;
-}
+        .form {
+            display: none;
+        }
 
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #e9e9e9;
-}
+        .form.active {
+            display: block;
+        }
 
-.divider span {
-  margin: 0 12px;
-}
-
-.google-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #e5e5e5;
-  background: #fff;
-  font-size: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.signup {
-  text-align: center;
-  margin-top: 24px;
-  font-size: 14px;
-  color: #919191;
-}
-
-.signup a {
-  color: #ee5307;
-  text-decoration: none;
-  font-weight: 500;
-} */
+        @media (max-width: 480px) {
+            .container {
+                padding: 32px 24px;
+            }
+        }
     </style>
 </head>
-
 <body>
 
     <div class="container">
-        <h1>Welcome back!</h1>
+        <h1>Welcome Back!</h1>
         <p class="subtitle">Please Login to Continue</p>
 
-        <form action="{{ route('login') }}" method="POST">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="siswa">Siswa</div>
+            <div class="tab" data-tab="admin">Admin</div>
+        </div>
+
+        <!-- Form Siswa (NISN) -->
+        <form id="form-siswa" class="form active" action="{{ route('login') }}" method="POST">
             @csrf
             <div class="form-group">
-                <label>Email / NISN</label>
-                <input type="text" name="email" placeholder="Enter your email / NISN" required>
+                <label for="nisn">NISN</label>
+                <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" pattern="\d{10}" title="NISN terdiri dari 10 angka">
+            </div>
+            <button type="submit" class="login-btn">Login sebagai Siswa</button>
+        </form>
+
+        <!-- Form Admin (Email) -->
+        <form id="form-admin" class="form" action="{{ route('login') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Masukkan email Anda">
             </div>
 
-            <div class="form-group password-group">
-                <label>Password</label>
+            <div class="form-group">
+                <label for="password-admin">Password</label>
                 <div class="password-wrapper">
-                    <input type="password" name="password" id="password" placeholder="Enter your password" required>
-                    <i class="fa-solid fa-eye" id="togglePassword"></i>
+                    <input type="password" id="password-admin" name="password" placeholder="Masukkan password">
+                    <i class="fa-solid fa-eye toggle-password" id="toggle-admin"></i>
                 </div>
             </div>
 
-            <button type="submit" class="login-btn">Login</button>
-        </form>
+            <button type="submit" class="login-btn">Login sebagai Admin</button>
+        </form> 
     </div>
 
-    <!-- {{-- <div class="divider"><span>or</span></div>
-
-  <button class="google-btn"><i class="fab fa-google"></i>Sign Up with Google</button>
-
-  <div class="signup">
-    Have an account? <a href="#">Sign Up</a>
-  </div> --}} -->
     <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const forms = document.querySelectorAll('.form');
 
-        togglePassword.addEventListener('click', function() {
-            if (password.type === "password") {
-                password.type = "text";
-                this.classList.remove("fa-eye-slash");
-                this.classList.add("fa-eye");
-            } else {
-                password.type = "password";
-                this.classList.remove("fa-eye");
-                this.classList.add("fa-eye-slash");
-            }
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const target = tab.getAttribute('data-tab');
+                forms.forEach(form => {
+                    form.classList.remove('active');
+                    if (form.id === `form-${target}`) {
+                        form.classList.add('active');
+                    }
+                });
+            });
         });
+
+        // Toggle password visibility
+      function setupToggle(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    // Cek apakah elemen ada, biar tidak error
+    if (!input || !icon) return;
+
+    icon.addEventListener('click', () => {
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    });
+}
+
+        setupToggle('password-siswa', 'toggle-siswa');
+        setupToggle('password-admin', 'toggle-admin');
     </script>
 
 </body>
-
 </html>
