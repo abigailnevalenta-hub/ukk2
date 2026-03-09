@@ -12,21 +12,25 @@
 
             <div class="form-group">
                 <div class="field">
-                    <label for="nisn">NISN</label>
+                    <label for="nisn">NISN</label>  
+                    <input type="text" id="nisn" name="nisn" value="{{ Auth::user()->nisn }}" readonly>
+                    @if (auth()->user()->role === 'admin')
                     <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" required>
+                    @endif
+                 
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="field">
-                    <label for="pelapor">Nama Pelapor</label>
+                    <label for="pelapor">Nama Pelapor</label>          
                     <input type="text" id="pelapor" name="pelapor" placeholder="Nama Lengkap Anda" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="field">
-                    <label for="kelas">Kelas</label>
+                    <label for="kelas">Kelas</label>                
                     <input type="text" id="kelas" name="kelas" placeholder="Misal: X RPL 1">
                 </div>
 
