@@ -7,6 +7,44 @@
 
 @section('content')
 
+    <section class="cards">
+        <a href="{{ route('pengaduan.index') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon total"><i class="fas fa-file"></i></div>
+                <h3>Total Pengaduan</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $total }} Laporan</p>
+                <div class="card-desc">Semua laporan yang masuk</div>
+            </div>
+        </a>
+
+        <a href="{{ route('menunggu') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon pending"><i class="fas fa-clock"></i></div>
+                <h3>Menunggu Proses</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $pending }} Laporan</p>
+                <div class="card-desc">Belum ditindaklanjuti</div>
+            </div>
+        </a>
+
+        <a href="{{ route('diperbaiki') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon review"><i class="fas fa-tools"></i></div>
+                <h3>Diperbaiki</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $review }} Laporan</p>
+                <div class="card-desc">Dalam proses perbaikan</div>
+            </div>
+        </a>
+
+        <a href="{{ route('selesai') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
+                <h3>Selesai Ditanganani</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $completed }} Laporan</p>
+                <div class="card-desc">Sudah diperbaiki</div>
+            </div>
+        </a>
+    </section>
+
     <section class="table-section">
         <div class="table-header">
             <h3>Laporan Pengaduan Terbaru</h3>

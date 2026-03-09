@@ -12,26 +12,45 @@
 
             <div class="form-group">
                 <div class="field">
-                    <label for="nisn">NISN</label>  
+                    <label for="nisn">NISN</label>
+                     @if (auth()->user()->role === 'user')
                     <input type="text" id="nisn" name="nisn" value="{{ Auth::user()->nisn }}" readonly>
-                    @if (auth()->user()->role === 'admin')
-                    <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" required>
                     @endif
-                 
+                    @if (auth()->user()->role === 'admin')
+                        <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" required>
+                    @endif
+
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="field">
-                    <label for="pelapor">Nama Pelapor</label>          
+                    <label for="pelapor">Nama Pelapor</label>
                     <input type="text" id="pelapor" name="pelapor" placeholder="Nama Lengkap Anda" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="field">
-                    <label for="kelas">Kelas</label>                
-                    <input type="text" id="kelas" name="kelas" placeholder="Misal: X RPL 1">
+                    <label for="kelas">Kelas</label>
+                    <select id="kelas" name="kelas" required>
+                        <option value="" disabled selected>Pilih Kelas...</option>
+                        <option value="X RPL">X RPL</option>
+                        <option value="X KULINER">X KULINER</option>
+                        <option value="X DKV">X DKV</option>
+                        <option value="X TP">X TP</option>
+                        <option value="X TKP">X TKP</option>
+                        <option value="XI RPL">XI RPL</option>
+                        <option value="XI KULINER">XI KULINER</option>
+                        <option value="XI DKV">XI DKV</option>
+                        <option value="XI TP">XI TP</option>
+                        <option value="XI TKP">XI TKP</option>
+                        <option value="XII RPL">XII RPL </option>
+                        <option value="XII KULINER">XII KULINER</option>
+                        <option value="XII DKV">XII DKV</option>
+                        <option value="XII TP">XII TP</option>
+                        <option value="XII TKP">XII TKP</option>    
+                    </select>
                 </div>
 
                 <div class="field">
@@ -55,7 +74,7 @@
             <div class="form-group">
                 <div class="field">
                     <label for="lokasi">Lokasi Spesifik</label>
-                    <input type="text" id="lokasi" name="lokasi" 
+                    <input type="text" id="lokasi" name="lokasi"
                         placeholder="Misal: Gedung A, Lantai 2, kelas 12 RPL" required>
                 </div>
                 <div class="field">
