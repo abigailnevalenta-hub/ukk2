@@ -4,6 +4,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashboardSiswaController;
+use App\Http\Controllers\KategoriController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LoginController::class, 'index'])->name('login.page');
@@ -14,6 +15,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('auth', 'role:admin');
 
 Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class);
+Route::get('/api/user-by-nisn', [App\Http\Controllers\PengaduanController::class, 'getUserByNisn']);
 
 Route::get('/tanggapan', function () {
     return view('tanggapan.tanggapan');
@@ -27,6 +29,6 @@ Route::get('/selesai', [App\Http\Controllers\PengaduanController::class, 'selesa
 
 Route::get('/dashboard-siswa', [App\Http\Controllers\DashboardSiswaController::class, 'index'])->name('dashboardSiswa')->middleware('auth', 'role:user');
 
-Route::get('kategori', function () {
-  return view('kategori.kategori');
-})->name('kategori');
+Route::resource('kategori', KategoriController::class)->middleware('auth', 'role:admin');
+
+Route::resource('user', App\Http\Controllers\UserController::class)->middleware('auth', 'role:admin');

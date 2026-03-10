@@ -578,12 +578,33 @@
             color: var(--icon-pending-color);
         }
 
+           .status-user {
+            background: #EFF6FF;
+            color: #3B82F6;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
         .status-pending::before {
             content: "";
             width: 10px;
             height: 10px;
             border-radius: 50%;
             background: var(--icon-pending-color);
+            display: inline-block;
+        }
+
+        .status-user::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3B82F6;
             display: inline-block;
         }
 

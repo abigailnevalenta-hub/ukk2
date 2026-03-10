@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,7 +51,7 @@ class PengaduanController extends Controller
         $query->where('sarana', $request->kategori);
     }
 
-    $nevas = $query->latest()->get();
+    $nevas = $query->latest()->paginate(10);
 
     return view('pengaduan.index', compact('nevas'));
 }
@@ -231,5 +232,23 @@ class PengaduanController extends Controller
         $pengaduans = $query->latest()->get();
 
         return view('selesai.selesai', compact('pengaduans'));
+    }
+
+    public function getUserByNisn(Request $request)
+    {
+        $nisn = $request->nisn;
+        $user = User::where('nisn', $nisn)->first();
+        
+        if ($user) {
+            return response()->json([
+                'success' => true,
+                'name' => $user->name
+            ]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'User not found'
+        ]);
     }
 }

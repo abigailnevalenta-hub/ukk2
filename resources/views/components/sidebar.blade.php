@@ -10,6 +10,12 @@
                 </li>
             @endif
 
+            @if (auth()->user()->role === 'admin')
+                <li class="{{ request()->routeIs('user.*') ? 'active' : '' }}">
+                    <a href="{{ route('user.index') }}" class="menu-link"><i class="fas fa-users"></i>User</a>
+                </li>
+            @endif
+
             @if (auth()->user()->role === 'user')
                 <li class="{{ request()->routeIs('dashboardSiswa') ? 'active' : '' }}">
                     <a href="{{ route('dashboardSiswa') }}" class="menu-link"><i class="fas fa-home"></i>Dashboard</a>
@@ -40,8 +46,8 @@
             @endif
 
               @if (auth()->user()->role === 'admin')
-             <li class="{{ request()->routeIs('kategori') ? 'active' : '' }}">
-                <a href="{{ route('kategori') }}" class="menu-link"><i class="fas fa-tags"></i>Kategori</a>
+             <li class="{{ request()->routeIs('kategori*') ? 'active' : '' }}">
+                <a href="{{ route('kategori.index') }}" class="menu-link"><i class="fas fa-tags"></i>Kategori</a>
             </li>
                 @endif
 
