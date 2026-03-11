@@ -77,12 +77,6 @@
                             {{-- BUTTON --}}
                             <div class="filter-action">
 
-                                <a href="{{ route('kategori.show', $kategori->id) }}" class="filter-btn"
-                                    style="background:transparent;border:1px solid var(--border-color);color:var(--text-main)">
-                                    <i class="fas fa-eye"></i>
-                                    Detail
-                                </a>
-
                                 <button type="submit" class="filter-btn">
                                     <i class="fas fa-save"></i>
                                     Update Kategori

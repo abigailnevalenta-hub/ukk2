@@ -6,65 +6,62 @@
 @section('header_subtitle', 'Halaman Selesai Ditanganani (comment test placeholder).')
 
 @section('content')
-<section class="filter-section">
-    <form method="GET" action="{{ route('selesai') }}">
-        <div class="filter-container">
+    <section class="filter-section">
+        <form method="GET" action="{{ route('selesai') }}">
+            <div class="filter-container">
 
-            <div class="filter-item">
-                <label>Tanggal</label>
-                <input type="date" name="tanggal" class="filter-input">
+                <div class="filter-item">
+                    <label>Tanggal</label>
+                    <input type="date" name="tanggal" class="filter-input">
+                </div>
+
+                <div class="filter-item">
+                    <label>Bulan</label>
+                    <select name="bulan" class="filter-input">
+                        <option value="">Semua Bulan</option>
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+
+                <div class="filter-item">
+                    <label>Siswa</label>
+                    <input type="text" name="siswa" placeholder="Cari nama siswa..." class="filter-input">
+                </div>
+
+                <div class="filter-item">
+                    <label>Kategori Sarana</label>
+                    <select name="kategori" class="filter-input">
+                        <option value="">Semua Kategori</option>
+
+                        @foreach ($kategoris ?? \App\Models\Kategori::all() as $kategori)
+                            <option value="{{ $kategori->nama_kategori }}">
+                                {{ $kategori->nama_kategori }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+                
+                <div class="filter-action">
+                    <button type="submit" class="filter-btn">
+                        Terapkan
+                    </button>
+                </div>
+
             </div>
-
-            <div class="filter-item">
-                <label>Bulan</label>
-                <select name="bulan" class="filter-input">
-                    <option value="">Semua Bulan</option>
-                    <option value="1">Januari</option>
-                    <option value="2">Februari</option>
-                    <option value="3">Maret</option>
-                    <option value="4">April</option>
-                    <option value="5">Mei</option>
-                    <option value="6">Juni</option>
-                    <option value="7">Juli</option>
-                    <option value="8">Agustus</option>
-                    <option value="9">September</option>
-                    <option value="10">Oktober</option>
-                    <option value="11">November</option>
-                    <option value="12">Desember</option>
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <label>Siswa</label>
-                <input type="text" name="siswa" placeholder="Cari nama siswa..." class="filter-input">
-            </div>
-
-            <div class="filter-item">
-                <label>Kategori Sarana</label>
-                <select name="kategori" class="filter-input">
-                    <option value="">Semua Kategori</option>
-                    <option value="Kursi">Kursi</option>
-                    <option value="Meja">Meja</option>
-                    <option value="Lampu">Lampu</option>
-                    <option value="Proyektor">Proyektor</option>
-                    <option value="AC">AC</option>
-                    <option value="Pintu">Pintu</option>
-                    <option value="Jendela">Jendela</option>
-                    <option value="Papan Tulis">Papan Tulis</option>
-                    <option value="Locker">Locker</option>
-                    <option value="Lainnya">Lainnya</option>
-                </select>
-            </div>
-
-            <div class="filter-action">
-                <button type="submit" class="filter-btn">
-                    Terapkan
-                </button>
-            </div>
-
-        </div>
-    </form>
-</section>
+        </form>
+    </section>
 
     <section class="table-section">
         <div class="table-header">

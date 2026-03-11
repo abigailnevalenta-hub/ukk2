@@ -22,13 +22,24 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|string|email|max:255|unique:users',
-            'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|in:admin,user',
-            'nisn' => 'nullable|string|max:20',
-        ]);
+        ];
+
+        // Add role-specific validation rules
+        if ($request->role === 'admin') {
+            $rules['email'] = 'required|string|email|max:255|unique:users';
+            $rules['password'] = 'required|string|min:8|confirmed';
+            $rules['nisn'] = 'nullable|string|max:20';
+        } else {
+            // User role
+            $rules['nisn'] = 'required|string|max:20|unique:users';
+            $rules['email'] = 'nullable|string|email|max:255|unique:users';
+            $rules['password'] = 'nullable|string|min:8|confirmed';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -36,13 +47,22 @@ class UserController extends Controller
                 ->withInput();
         }
 
-        User::create([
+        $userData = [
             'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : null,
             'role' => $request->role,
             'nisn' => $request->nisn,
-        ]);
+        ];
+
+        // Only include email and password if provided
+        if ($request->filled('email')) {
+            $userData['email'] = $request->email;
+        }
+        
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        User::create($userData);
 
         return redirect()->route('user.index')
             ->with('success', 'User created successfully');

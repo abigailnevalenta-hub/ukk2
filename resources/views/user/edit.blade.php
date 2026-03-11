@@ -1,6 +1,8 @@
 <!-- Edit User Modal -->
 <div id="userEditModal" class="modal">
     <div class="modal-content edit-modal-content">
+
+        <!-- HEADER -->
         <div class="modal-header">
             <div>
                 <h2>Edit User</h2>
@@ -9,111 +11,119 @@
             <button class="modal-close" id="closeEditModal">&times;</button>
         </div>
 
+        <!-- BODY -->
         <div class="modal-body">
             <form id="editForm" method="POST">
                 @csrf
                 @method('PUT')
 
-                <!-- Row 1: Role & Nama -->
+                <!-- Row 1 -->
                 <div class="edit-row">
                     <div class="edit-field">
-                        <label for="editRole">
-                            <i class="#"></i> Role
-                        </label>
-                        <select id="editRole" name="role" required onchange="toggleFields()">
+                        <label for="editRole">Role</label>
+                        <select id="editRole" name="role" onchange="toggleFields()">
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
+
                     <div class="edit-field">
-                        <label for="editName">
-                            <i class="#"></i> Nama Lengkap
-                        </label>
-                        <input type="text" id="editName" name="name" placeholder="Nama Lengkap" required>
+                        <label for="editName">Nama Lengkap</label>
+                        <input type="text" id="editName" name="name" placeholder="Nama Lengkap">
                     </div>
                 </div>
 
-                <!-- Row 2: Email -->
+                <!-- Email -->
                 <div class="edit-row edit-row-full" id="emailRow">
                     <div class="edit-field">
-                        <label for="editEmail">
-                            <i class="#"></i> Email
-                        </label>
+                        <label for="editEmail">Email</label>
                         <input type="email" id="editEmail" name="email" placeholder="email@example.com">
                         <span class="field-hint">Email wajib diisi untuk role admin</span>
                     </div>
                 </div>
 
-                <!-- Row 3: Password -->
+                <!-- Password -->
                 <div class="edit-row edit-row-full" id="passwordRow">
                     <div class="edit-field">
-                        <label for="editPassword">
-                            <i class="#"></i> Password Baru
-                        </label>
-                        <input type="password" id="editPassword" name="password" placeholder="Biarkan kosong jika tidak diubah">
+                        <label for="editPassword">Password Baru</label>
+                        <input type="password" id="editPassword" name="password"
+                            placeholder="Biarkan kosong jika tidak diubah">
                         <span class="field-hint">Kosongkan jika tidak ingin mengubah password</span>
                     </div>
                 </div>
 
-                <!-- Row 4: Konfirmasi Password -->
+                <!-- Confirm Password -->
                 <div class="edit-row edit-row-full" id="passwordConfirmRow">
                     <div class="edit-field">
-                        <label for="editPasswordConfirmation">
-                            <i class="#"></i> Konfirmasi Password Baru
-                        </label>
-                        <input type="password" id="editPasswordConfirmation" name="password_confirmation" placeholder="Konfirmasi password baru">
+                        <label for="editPasswordConfirmation">Konfirmasi Password Baru</label>
+                        <input type="password" id="editPasswordConfirmation" name="password_confirmation"
+                            placeholder="Konfirmasi password baru">
                     </div>
                 </div>
 
-                <!-- Row 5: NISN -->
-                <div class="edit-row edit-row-full" id="nisnRow" style="display: none;">
+                <!-- NISN -->
+                <div class="edit-row edit-row-full" id="nisnRow" style="display:none;">
                     <div class="edit-field">
-                        <label for="editNisn">
-                            <i class="#"></i> NISN
-                        </label>
+                        <label for="editNisn">NISN</label>
                         <input type="text" id="editNisn" name="nisn" placeholder="Nomor Induk Siswa Nasional">
                         <span class="field-hint">NISN opsional untuk role user</span>
                     </div>
                 </div>
+
             </form>
         </div>
 
+        <!-- FOOTER -->
         <div class="modal-footer">
-            <button class="btn btn-secondary" id="closeEditBtn">
-                <i class="fas fa-times"></i> Batal
-            </button>
-            <button class="btn btn-primary" id="submitEditBtn">
-                <i class="fas fa-save"></i> Simpan Perubahan
-            </button>
+            <button class="btn btn-secondary" id="closeEditBtn">Batal</button>
+            <button class="btn btn-primary" id="submitEditBtn">Simpan Perubahan</button>
         </div>
+
     </div>
 </div>
 
+
 <style>
-    /* MODAL SIZE */
+    /* GLOBAL FIX */
+    * {
+        box-sizing: border-box;
+    }
+
+    /* MODAL */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
     .edit-modal-content {
+        background: #fff;
         max-width: 600px;
         width: 95%;
         padding: 32px;
+        border-radius: 12px;
     }
 
     /* HEADER */
     .modal-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
         margin-bottom: 24px;
     }
 
     .modal-subtitle {
-        color: #6B7280;
         font-size: 14px;
-        margin-top: 4px;
-    }
-
-    /* BODY */
-    .modal-body {
-        margin-top: 8px;
+        color: #6B7280;
     }
 
     /* ROW */
@@ -139,89 +149,63 @@
         font-size: 14px;
         font-weight: 600;
         color: #374151;
-        display: flex;
-        align-items: center;
-        gap: 8px;
     }
 
     .edit-field input,
-    .edit-field select,
-    .edit-field textarea {
+    .edit-field select {
+        width: 100%;
         padding: 10px 14px;
         border: 1px solid #D1D5DB;
         border-radius: 8px;
         font-size: 14px;
-        transition: all 0.2s;
-        background: #FFFFFF;
     }
 
     .edit-field input:focus,
-    .edit-field select:focus,
-    .edit-field textarea:focus {
+    .edit-field select:focus {
         outline: none;
         border-color: #3B82F6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .edit-field textarea {
-        resize: vertical;
-        min-height: 100px;
     }
 
     /* FIELD HINT */
     .field-hint {
         font-size: 12px;
         color: #6B7280;
-        margin-top: 4px;
-    }
-
-    .field-hint-inline {
-        font-size: 12px;
-        color: #6B7280;
-        margin-left: 8px;
     }
 
     /* BUTTON */
-    .btn-primary {
-        background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
     }
 
-    .btn-primary:hover {
-        background: linear-gradient(135deg, var(--primary-hover), #e96a00);
-        transform: translateY(-1px);
+    .btn {
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: #ff7a00;
+        color: white;
+        border: none;
     }
 
     .btn-secondary {
-        background: #F3F4F6;
-        color: #374151;
-        border: 1px solid #D1D5DB;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-        background: #E5E7EB;
-        transform: translateY(-1px);
+        background: #eee;
+        border: 1px solid #ddd;
     }
 
     /* RESPONSIVE */
     @media(max-width:600px) {
         .edit-row {
             grid-template-columns: 1fr;
-            gap: 16px;
         }
     }
 </style>
+
 
 <script>
     const editModal = document.getElementById('userEditModal');
@@ -230,13 +214,8 @@
     const submitEditBtn = document.getElementById('submitEditBtn');
     const editForm = document.getElementById('editForm');
 
-    closeEditModalBtn.addEventListener('click', () => {
-        editModal.classList.remove('active');
-    });
-
-    closeEditBtn.addEventListener('click', () => {
-        editModal.classList.remove('active');
-    });
+    closeEditModalBtn.onclick = () => editModal.classList.remove('active');
+    closeEditBtn.onclick = () => editModal.classList.remove('active');
 
     editModal.addEventListener('click', (e) => {
         if (e.target === editModal) {
@@ -245,44 +224,50 @@
     });
 
     function toggleFields() {
+
         const role = document.getElementById('editRole').value;
+
         const emailRow = document.getElementById('emailRow');
         const passwordRow = document.getElementById('passwordRow');
         const passwordConfirmRow = document.getElementById('passwordConfirmRow');
         const nisnRow = document.getElementById('nisnRow');
 
-        if (role === 'user') {
-            emailRow.style.display = 'none';
-            passwordRow.style.display = 'none';
-            passwordConfirmRow.style.display = 'none';
-            nisnRow.style.display = 'flex';
+        if (role === "user") {
+
+            emailRow.style.display = "none";
+            passwordRow.style.display = "none";
+            passwordConfirmRow.style.display = "none";
+            nisnRow.style.display = "grid";
+
         } else {
-            emailRow.style.display = 'flex';
-            passwordRow.style.display = 'flex';
-            passwordConfirmRow.style.display = 'flex';
-            nisnRow.style.display = 'none';
+
+            emailRow.style.display = "grid";
+            passwordRow.style.display = "grid";
+            passwordConfirmRow.style.display = "grid";
+            nisnRow.style.display = "none";
+
         }
+
     }
 
     function openEditModal(data) {
-        // Set form action
+
         editForm.action = data.action;
 
-        // Fill form fields
         document.getElementById('editRole').value = data.role || 'user';
         document.getElementById('editName').value = data.name || '';
         document.getElementById('editEmail').value = data.email || '';
         document.getElementById('editNisn').value = data.nisn || '';
 
-        // Toggle fields based on role
         toggleFields();
 
         editModal.classList.add('active');
+
     }
 
-    submitEditBtn.addEventListener('click', () => {
+    submitEditBtn.onclick = () => {
         editForm.submit();
-    });
+    }
 
     window.openUserEditModal = openEditModal;
 </script>
