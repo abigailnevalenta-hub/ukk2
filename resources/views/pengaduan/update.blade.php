@@ -20,15 +20,22 @@
                             <label for="modalnisnLaporan">
                                 <i class="#"></i> NISN
                             </label>
-                            <input type="text" id="modalnisnLaporan" name="nisn" placeholder="Misal: LP-001"
-                                readonly class="input-readonly">
-                            <span class="field-hint">nisn laporan tidak dapat diubah</span>
+                            @if (auth()->user()->role === 'user')
+                            <input type="text" id="modalnisnLaporan" name="nisn" value="{{ Auth::user()->nisn }}" readonly class="input-readonly">
+                            @else
+                            <input type="text" id="modalnisnLaporan" name="nisn" placeholder="Masukkan NISN" required>
+                            @endif
+                            <span class="field-hint">NISN tidak dapat diubah</span>
                         </div>
                         <div class="edit-field">
                             <label for="editPelapor">
                                 <i class="#"></i> Nama Pelapor
                             </label>
-                            <input type="text" id="editPelapor" name="pelapor" placeholder="Nama Lengkap" required>
+                            @if (auth()->user()->role === 'user')
+                            <input type="text" id="editPelapor" name="pelapor" value="{{ Auth::user()->name }}" readonly class="input-readonly">
+                            @else
+                            <input type="text" id="editPelapor" name="pelapor" placeholder="Nama Pelapor" readonly>
+                            @endif
                         </div>
                     </div>
 
@@ -64,16 +71,9 @@
                             </label>
                             <select id="editSarana" name="sarana" required>
                                 <option value="" disabled>Pilih kategori sarana...</option>
-                                <option value="Kursi">Kursi</option>
-                                <option value="Meja">Meja</option>
-                                <option value="Lampu">Lampu</option>
-                                <option value="Proyektor">Proyektor</option>
-                                <option value="AC">AC</option>
-                                <option value="Pintu">Pintu</option>
-                                <option value="Jendela">Jendela</option>
-                                <option value="Papan Tulis">Papan Tulis</option>
-                                <option value="Locker">Locker</option>
-                                <option value="Lainnya">Lainnya</option>
+                                @foreach($kategoris ?? \App\Models\Kategori::all() as $kategori)
+                                <option value="{{ $kategori->nama_kategori }}">{{ $kategori->nama_kategori }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -91,6 +91,16 @@
                                     <option value="Diperbaiki">Diperbaiki</option>
                                     <option value="Selesai">Selesai</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Tanggapan -->
+                        <div class="edit-row edit-row-full">
+                            <div class="edit-field">
+                                <label for="editTanggapan">
+                                    <i class="#"></i> Tanggapan Admin
+                                </label>
+                                <textarea id="editTanggapan" name="tanggapan" placeholder="Berikan tanggapan untuk laporan ini..."></textarea>
                             </div>
                         </div>
                     @endif
@@ -629,6 +639,12 @@
                 const statusSelect = document.getElementById('editStatus');
                 if (statusSelect) {
                     statusSelect.value = data.status || 'Menunggu';
+                }
+
+                // tanggapan (jika ada)
+                const tanggapanTextarea = document.getElementById('editTanggapan');
+                if (tanggapanTextarea) {
+                    tanggapanTextarea.value = data.tanggapan || '';
                 }
 
                 // reset upload

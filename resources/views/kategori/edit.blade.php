@@ -3,123 +3,161 @@
 @section('title', 'Edit Kategori - PSS')
 
 @section('header_title', 'Edit Kategori')
-@section('header_subtitle', 'Ubah data kategori pengaduan')
+@section('header_subtitle', 'Form edit kategori pengaduan')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Flash Messages -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
-    <!-- Form Card -->
     <div class="row justify-content-center">
         <div class="col-lg-8">
+
             <div class="card">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">
-                        <i class="fas fa-edit"></i> Edit Kategori: {{ $kategori->nama_kategori }}
-                    </h5>
+
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center" style="display: flex; justify-content: space-between;">
+                        <h5 class="mb-0" style="margin-bottom: 1rem">
+                            <i class="fas fa-edit"></i>
+                            Nama Kategori: {{ $kategori->nama_kategori }}
+                        </h5>
+
+                    <a href="{{ route('kategori.index') }}" class="filter-btn">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
                 </div>
-                <div class="card-body">
+
+                <div class="table-body">
+
                     <form action="{{ route('kategori.update', $kategori->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        
-                        <!-- Nama Kategori -->
-                        <div class="mb-3">
-                            <label for="nama_kategori" class="form-label">
-                                Nama Kategori <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('nama_kategori') is-invalid @enderror" 
-                                   id="nama_kategori" 
-                                   name="nama_kategori" 
-                                   value="{{ old('nama_kategori', $kategori->nama_kategori) }}" 
-                                   placeholder="Masukkan nama kategori"
-                                   required>
-                            @error('nama_kategori')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                            <small class="form-text text-muted">Nama kategori harus unik dan tidak boleh kosong.</small>
-                        </div>
 
-                        <!-- Deskripsi -->
-                        <div class="mb-4">
-                            <label for="deskripsi" class="form-label">
-                                Deskripsi
-                            </label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                      id="deskripsi" 
-                                      name="deskripsi" 
-                                      rows="4" 
-                                      placeholder="Masukkan deskripsi kategori (opsional)">{{ old('deskripsi', $kategori->deskripsi) }}</textarea>
-                            @error('deskripsi')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                            <small class="form-text text-muted">Deskripsi bersifat opsional, maksimal 1000 karakter.</small>
-                        </div>
+                        <div class="filter-container">
 
-                        <!-- Form Actions -->
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('kategori.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Kembali
-                            </a>
-                            <div>
-                                <a href="{{ route('kategori.show', $kategori->id) }}" class="btn btn-outline-info me-2">
-                                    <i class="fas fa-eye"></i> Lihat Detail
-                                </a>
-                                <button type="submit" class="btn btn-warning">
-                                    <i class="fas fa-save"></i> Update Kategori
-                                </button>
+                            {{-- NAMA KATEGORI --}}
+                            <div class="filter-item">
+                                <label>Nama Kategori <span style="color:#FF4757">*</span></label>
+
+                                <input type="text" name="nama_kategori"
+                                    class="filter-input @error('nama_kategori') is-invalid @enderror"
+                                    value="{{ old('nama_kategori', $kategori->nama_kategori) }}"
+                                    placeholder="Masukkan nama kategori" required>
+
+                                @error('nama_kategori')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+
+                                <small class="form-hint">
+                                    Nama kategori harus unik dan tidak boleh kosong.
+                                </small>
                             </div>
+
+
+                            {{-- DESKRIPSI --}}
+                            <div class="filter-item">
+                                <label>Deskripsi</label>
+
+                                <textarea name="deskripsi" rows="4" class="filter-input @error('deskripsi') is-invalid @enderror"
+                                    placeholder="Masukkan deskripsi kategori (opsional)">{{ old('deskripsi', $kategori->deskripsi) }}</textarea>
+
+                                @error('deskripsi')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
+
+                                <small class="form-hint">
+                                    Deskripsi bersifat opsional.
+                                </small>
+                            </div>
+
+
+                            {{-- BUTTON --}}
+                            <div class="filter-action">
+
+                                <a href="{{ route('kategori.show', $kategori->id) }}" class="filter-btn"
+                                    style="background:transparent;border:1px solid var(--border-color);color:var(--text-main)">
+                                    <i class="fas fa-eye"></i>
+                                    Detail
+                                </a>
+
+                                <button type="submit" class="filter-btn">
+                                    <i class="fas fa-save"></i>
+                                    Update Kategori
+                                </button>
+
+                            </div>
+
                         </div>
+
                     </form>
+
                 </div>
             </div>
 
-            <!-- Info Card -->
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h6 class="card-title">
-                        <i class="fas fa-info-circle text-info"></i> Informasi Kategori
-                    </h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <small class="text-muted">ID Kategori:</small>
-                            <p class="mb-2"><strong>{{ $kategori->id }}</strong></p>
-                        </div>
-                        <div class="col-md-6">
-                            <small class="text-muted">Dibuat:</small>
-                            <p class="mb-2"><strong>{{ $kategori->created_at->format('d/m/Y H:i') }}</strong></p>
-                        </div>
-                        <div class="col-md-6">
-                            <small class="text-muted">Terakhir Diubah:</small>
-                            <p class="mb-2"><strong>{{ $kategori->updated_at->format('d/m/Y H:i') }}</strong></p>
-                        </div>
-                        <div class="col-md-6">
-                            <small class="text-muted">Jumlah Pengaduan:</small>
-                            <p class="mb-2">
-                                <span class="badge bg-info">{{ $kategori->pengaduans()->count() }} pengaduan</span>
-                            </p>
-                        </div>
-                    </div>
-                    @if($kategori->pengaduans()->count() > 0)
-                        <div class="alert alert-warning mt-2 mb-0">
-                            <i class="fas fa-exclamation-triangle"></i> 
-                            <strong>Perhatian:</strong> Kategori ini memiliki {{ $kategori->pengaduans()->count() }} pengaduan terkait. Jika dihapus, data pengaduan akan terpengaruh.
-                        </div>
-                    @endif
+
+            {{-- INFO SECTION --}}
+            <div class="table-section" style="margin-top:20px">
+
+                <div class="table-header">
+                    <h3>Informasi</h3>
                 </div>
+
+                <div class="table-body">
+                    <ul class="info-list">
+                        <li>Nama kategori digunakan untuk mengelompokkan jenis pengaduan</li>
+                        <li>Setiap kategori dapat memiliki banyak pengaduan</li>
+                        <li>Kategori yang sudah memiliki pengaduan tidak dapat dihapus</li>
+                    </ul>
+                </div>
+
             </div>
+
         </div>
     </div>
-</div>
+
+
+    <style>
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .filter-item {
+            width: 100%;
+        }
+
+        .filter-action {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: #FF4757;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .form-hint {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .info-list {
+            padding-left: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .info-list li {
+            margin-bottom: 8px;
+        }
+    </style>
+
 @endsection

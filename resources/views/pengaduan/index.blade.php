@@ -130,11 +130,34 @@
                                     data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
-                                    data-status="{{ $neva->status }}"
+                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
                                     data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-eye"></i>
                                 </button>
+                                
+                            @if(auth()->user()->role == 'admin')
+                                <button class="action-btn tanggapan" data-id="{{ $neva->id }}" 
+                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}">
+                                    <i class="fas fa-reply"></i> 
+                                </button>
 
+                                <button class="action-btn edit" data-id="{{ $neva->id }}"
+                                    data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
+                                    data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
+                                    data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
+                                    data-tanggal="{{ $neva->created_at->format('d F Y') }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                                <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
+                                    data-nisn="{{ $neva->nisn }}" data-sarana="{{ $neva->sarana }}"
+                                    data-lokasi="{{ $neva->lokasi }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            @endif
+                            
+                            @if(auth()->user()->role == 'user')
                                 <button class="action-btn edit" data-id="{{ $neva->id }}"
                                     data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
@@ -149,6 +172,7 @@
                                     data-lokasi="{{ $neva->lokasi }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                            @endif
                             </div>
                         </td>
                     </tr>
@@ -173,6 +197,43 @@
 
     <!-- Modal Delete Pengaduan -->
     @include('pengaduan.delete')
+
+    <!-- Modal Tanggapan Admin -->
+    <div id="tanggapanModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Beri Tanggapan & Update Status</h3>
+                <button class="modal-close" onclick="closeTanggapanModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="tanggapanForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="tanggapanId" name="pengaduan_id">
+                    
+                    <div class="form-group">
+                        <label for="tanggapanStatus">Status Laporan</label>
+                        <select id="tanggapanStatus" name="status" required>
+                            <option value="Menunggu">Menunggu</option>
+                            <option value="Diperbaiki">Diperbaiki</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tanggapanText">Tanggapan</label>
+                        <textarea id="tanggapanText" name="tanggapan" rows="4" 
+                            placeholder="Berikan tanggapan untuk laporan ini..." required></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn cancel" onclick="closeTanggapanModal()">Batal</button>
+                        <button type="submit" class="btn submit">Simpan Tanggapan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endpush
 
 @push('scripts')
@@ -225,5 +286,464 @@
                 window.openDeleteModal(deleteData);
             });
         });
+
+        // Tanggapan button functionality
+        document.querySelectorAll('.action-btn.tanggapan').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const status = this.getAttribute('data-status');
+                const tanggapan = this.getAttribute('data-tanggapan');
+                openTanggapanModal(id, status, tanggapan);
+            });
+        });
+
+        function closeTanggapanModal() {
+            document.getElementById('tanggapanModal').style.display = 'none';
+        }
+
+        function openTanggapanModal(id, currentStatus, currentTanggapan) {
+            document.getElementById('tanggapanId').value = id;
+            document.getElementById('tanggapanStatus').value = currentStatus || 'Menunggu';
+            document.getElementById('tanggapanText').value = currentTanggapan || '';
+            const modal = document.getElementById('tanggapanModal');
+            modal.style.display = 'flex';
+            modal.style.position = 'fixed';
+        }
+
+        // Tanggapan form submit
+        document.getElementById('tanggapanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('tanggapanId').value;
+            const status = document.getElementById('tanggapanStatus').value;
+            const tanggapan = document.getElementById('tanggapanText').value;
+            
+            console.log('Submitting tanggapan:', { id, status, tanggapan });
+            
+            const submitBtn = this.querySelector('.btn.submit');
+            const originalText = submitBtn.innerHTML;
+            
+            // Loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            submitBtn.disabled = true;
+            
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            console.log('CSRF Token:', csrfToken);
+            
+            if (!csrfToken) {
+                console.error('CSRF token not found!');
+                alert('CSRF token not found. Please refresh the page.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            fetch(`/pengaduan/${id}/tanggapan`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: status,
+                    tanggapan: tanggapan,
+                    _method: 'PUT'
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Berhasil!';
+                    setTimeout(() => {
+                        closeTanggapanModal();
+                        location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Gagal menyimpan tanggapan');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                submitBtn.innerHTML = '<i class="fas fa-exclamation"></i> Gagal!';
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+                
+                // Tampilkan error message
+                alert(error.message || 'Terjadi kesalahan saat menyimpan tanggapan');
+            });
+        });
     </script>
 @endpush
+
+
+@push('styles')
+<style>
+    /* Action Buttons Styling */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-card);
+        color: var(--text-main);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .action-btn.view {
+        border-color: #3b82f6;
+        color: #3b82f6;
+    }
+    
+    .action-btn.view:hover {
+        background: #3b82f6;
+        color: white;
+    }
+    
+    .action-btn.tanggapan {
+        border-color: #10b981;
+        color: #10b981;
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    }
+    
+    .action-btn.tanggapan:hover {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border-color: #059669;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+    }
+    
+    .action-btn.edit {
+        border-color: #f59e0b;
+        color: #f59e0b;
+    }
+    
+    .action-btn.edit:hover {
+        background: #f59e0b;
+        color: white;
+    }
+    
+    .action-btn.delete {
+        border-color: #ef4444;
+        color: #ef4444;
+    }
+    
+    .action-btn.delete:hover {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .action-btn i {
+        font-size: 11px;
+    }
+    
+    /* Modal Styling */
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        background: var(--bg-card);
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-color);
+        animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9) translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px;
+        border-bottom: 1px solid var(--border-color);
+        background: linear-gradient(135deg, var(--bg-card), var(--bg-body));
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .modal-header h3 {
+        margin: 0;
+        color: var(--text-main);
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .modal-header h3::before {
+        content: "💬";
+        font-size: 20px;
+    }
+    
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-muted);
+    }
+    
+    .modal-body {
+        padding: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--bg-input);
+        color: var(--text-main);
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+    
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn.cancel {
+        background: var(--bg-table-head);
+        color: var(--text-sidebar);
+        border: 1px solid var(--border-color);
+    }
+    
+    .btn.cancel:hover {
+        background: var(--bg-body);
+        transform: translateY(-1px);
+    }
+    
+    .btn.submit {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border: 1px solid #10b981;
+    }
+    
+    .btn.submit:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+    }
+    
+    /* Modal Styling */
+    .modal {
+        position: fixed !important;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal[style*="flex"] {
+        display: flex !important;
+    }
+    
+    .modal-content {
+        background: var(--bg-card);
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-color);
+        animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9) translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px;
+        border-bottom: 1px solid var(--border-color);
+        background: linear-gradient(135deg, var(--bg-card), var(--bg-body));
+        border-radius: 20px 20px 0 0;
+    }
+    
+    .modal-header h3 {
+        margin: 0;
+        color: var(--text-main);
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .modal-header h3::before {
+        content: "💬";
+        font-size: 20px;
+    }
+    
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-muted);
+    }
+    
+    .modal-body {
+        padding: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--bg-input);
+        color: var(--text-main);
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+    
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+</style>
+@endpush
+

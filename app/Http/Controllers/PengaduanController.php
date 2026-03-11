@@ -6,6 +6,7 @@ use App\Models\Pengaduan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PengaduanController extends Controller
 {
@@ -58,7 +59,8 @@ class PengaduanController extends Controller
 
     public function create()
     {
-        return view('pengaduan.create');
+        $kategoris = \App\Models\Kategori::all();
+        return view('pengaduan.create', compact('kategoris'));
     }
 
     public function store(Request $request)
@@ -67,7 +69,7 @@ class PengaduanController extends Controller
             'nisn' => 'required',
             'pelapor' => 'required',
             'kelas' => 'required',
-            'sarana' => 'required',
+            'sarana' => 'required|exists:kategoris,nama_kategori',
             'lokasi' => 'string|nullable',
             'detail' => 'string|nullable',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
@@ -98,17 +100,21 @@ class PengaduanController extends Controller
    {
     $pengaduan = Pengaduan::findOrFail($id);
 
-    $data = [
-        'pelapor' => $request->pelapor,
-        'kelas' => $request->kelas,
-        'sarana' => $request->sarana,
-        'lokasi' => $request->lokasi,
-        'detail' => $request->detail,
-    ];
+    $validatedData = $request->validate([
+        'nisn' => 'required',
+        'pelapor' => 'required', 
+        'kelas' => 'required',
+        'sarana' => 'required|exists:kategoris,nama_kategori',
+        'lokasi' => 'string|nullable',
+        'detail' => 'string|nullable',
+        'tanggapan' => 'string|nullable',
+    ]);
+
+    $data = $validatedData;
 
     // hanya admin boleh ubah status
     if ($request->user() && $request->user()->role === 'admin') {
-    $data['status'] = $request->status;
+        $data['status'] = $request->status;
     }
     $pengaduan->update($data);
 
@@ -234,6 +240,49 @@ class PengaduanController extends Controller
         return view('selesai.selesai', compact('pengaduans'));
     }
 
+    public function tanggapan(Request $request, $id)
+    {
+        try {
+            $pengaduan = Pengaduan::findOrFail($id);
+            
+            $validatedData = $request->validate([
+                'status' => 'required|in:Menunggu,Diperbaiki,Selesai',
+                'tanggapan' => 'nullable|string'
+            ]);
+            
+            // Log data untuk debugging
+            \Log::info('Tanggapan data:', [
+                'id' => $id,
+                'validated_data' => $validatedData,
+                'before_update' => $pengaduan->toArray()
+            ]);
+            
+            $pengaduan->update($validatedData);
+            
+            // Log hasil update
+            \Log::info('After update:', [
+                'pengaduan' => $pengaduan->fresh()->toArray()
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Tanggapan berhasil disimpan',
+                'data' => $pengaduan->fresh()
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error saving tanggapan:', [
+                'error' => $e->getMessage(),
+                'request_data' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan tanggapan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function getUserByNisn(Request $request)
     {
         $nisn = $request->nisn;
@@ -250,5 +299,54 @@ class PengaduanController extends Controller
             'success' => false,
             'message' => 'User not found'
         ]);
+    }
+
+    public function getTanggapanList(Request $request)
+    {
+        $user = Auth::user();
+        
+        if ($user->role === 'admin') {
+            // Admin lihat semua tanggapan
+            $tanggapanList = Pengaduan::whereNotNull('tanggapan')
+                ->where('tanggapan', '!=', '')
+                ->latest('updated_at')
+                ->take(10)
+                ->get(['id', 'pelapor', 'status', 'tanggapan', 'updated_at']);
+        } else {
+            // User hanya lihat tanggapan dari pengaduannya sendiri
+            $tanggapanList = Pengaduan::where('nisn', $user->nisn)
+                ->whereNotNull('tanggapan')
+                ->where('tanggapan', '!=', '')
+                ->latest('updated_at')
+                ->take(10)
+                ->get(['id', 'pelapor', 'status', 'tanggapan', 'updated_at']);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data' => $tanggapanList
+        ]);
+    }
+
+    public function tanggapanIndex(Request $request)
+    {
+        $user = Auth::user();
+        
+        if ($user->role === 'admin') {
+            // Admin lihat semua tanggapan
+            $tanggapans = Pengaduan::whereNotNull('tanggapan')
+                ->where('tanggapan', '!=', '')
+                ->latest('updated_at')
+                ->paginate(10);
+        } else {
+            // User hanya lihat tanggapan dari pengaduannya sendiri
+            $tanggapans = Pengaduan::where('nisn', $user->nisn)
+                ->whereNotNull('tanggapan')
+                ->where('tanggapan', '!=', '')
+                ->latest('updated_at')
+                ->paginate(10);
+        }
+        
+        return view('tanggapan.tanggapan', compact('tanggapans'));
     }
 }

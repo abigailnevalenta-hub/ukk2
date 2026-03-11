@@ -16,10 +16,13 @@ Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'inde
 
 Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class);
 Route::get('/api/user-by-nisn', [App\Http\Controllers\PengaduanController::class, 'getUserByNisn']);
+Route::get('/api/tanggapan-list', [App\Http\Controllers\PengaduanController::class, 'getTanggapanList'])->middleware('auth');
+Route::put('/pengaduan/{id}/tanggapan', [App\Http\Controllers\PengaduanController::class, 'tanggapan'])->name('pengaduan.tanggapan');
+Route::post('/pengaduan/{id}/tanggapan', [App\Http\Controllers\PengaduanController::class, 'tanggapan']);
 
-Route::get('/tanggapan', function () {
-    return view('tanggapan.tanggapan');
-})->name('tanggapan');
+Route::get('/tanggapan', [App\Http\Controllers\PengaduanController::class, 'tanggapanIndex'])->name('tanggapan')->middleware('auth');
+
+Route::get('/pengaduan-saya', [App\Http\Controllers\PengaduanController::class, 'pengaduanSaya'])->name('pengaduan.saya')->middleware('auth', 'role:user');
 
 Route::get('/menunggu', [App\Http\Controllers\PengaduanController::class, 'menunggu'])->name('menunggu');
 

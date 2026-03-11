@@ -40,6 +40,9 @@
         <div class="form-group">
             <div class="field">
                 <label for="kelas">Kelas</label>
+                @if (auth()->user()->role === 'user' && auth()->user()->kelas)
+                <input type="text" id="kelas" name="kelas" value="{{ Auth::user()->kelas }}" readonly>
+                @else
                 <select id="kelas" name="kelas" required>
                     <option value="" disabled selected>Pilih Kelas...</option>
                     <option value="X RPL">X RPL</option>
@@ -58,22 +61,16 @@
                     <option value="XII TP">XII TP</option>
                     <option value="XII TKP">XII TKP</option>
                 </select>
+                @endif
             </div>
 
             <div class="field">
                 <label for="sarana">Kategori Sarana</label>
                 <select id="sarana" name="sarana" required>
                     <option value="" disabled selected>Pilih kategori sarana...</option>
-                    <option value="Kursi">Kursi</option>
-                    <option value="Meja">Meja</option>
-                    <option value="Lampu">Lampu</option>
-                    <option value="Proyektor">Proyektor</option>
-                    <option value="AC">AC</option>
-                    <option value="Pintu">Pintu</option>
-                    <option value="Jendela">Jendela</option>
-                    <option value="Papan Tulis">Papan Tulis</option>
-                    <option value="Locker">Locker</option>
-                    <option value="Lainnya">Lainnya</option>
+                    @foreach($kategoris as $kategori)
+                    <option value="{{ $kategori->nama_kategori }}">{{ $kategori->nama_kategori }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -312,7 +309,7 @@
         nisnInput.addEventListener('input', function() {
             const nisn = this.value.trim();
             
-            if (nisn.length >= 5) { // Minimum NISN length
+            if (nisn.length >= 3) { // Minimum NISN length
                 fetch(`/api/user-by-nisn?nisn=${encodeURIComponent(nisn)}`)
                     .then(response => response.json())
                     .then(data => {

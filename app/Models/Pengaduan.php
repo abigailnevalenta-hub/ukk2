@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pengaduan extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ['id'];
+    protected $fillable = [
+        'nisn',
+        'pelapor',
+        'kelas',
+        'sarana',
+        'lokasi',
+        'detail',
+        'foto',
+        'tanggal',
+        'status',
+        'tanggapan'
+    ];
 
     protected $table = 'pengaduans';
 }

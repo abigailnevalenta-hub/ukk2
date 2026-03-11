@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-                $table->string('nisn')->nullable()->after('email')->unique();
+        Schema::create('kategoris', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_kategori');
+            $table->text('deskripsi')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,10 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            if(Schema::hasColumn('users', 'nisn')) { 
-                $table->dropColumn('nisn');
-            }
-        });
+        Schema::dropIfExists('kategoris');
     }
 };

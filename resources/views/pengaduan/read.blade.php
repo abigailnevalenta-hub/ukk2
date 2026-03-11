@@ -77,6 +77,14 @@
                 </div>
             </div>
 
+            <!-- Tanggapan Admin -->
+            <div class="detail-grid detail-grid-full" id="tanggapanSection" style="display: none;">
+                <div class="detail-field">
+                    <span class="detail-label">Tanggapan Admin</span>
+                    <div id="modalTanggapan" class="detail-value detail-text">-</div>
+                </div>
+            </div>
+
         </div>
 
         <!-- FOOTER -->
@@ -293,6 +301,17 @@
             statusEl.classList.add('status-repair');
         } else {
             statusEl.classList.add('status-done');
+        }
+
+        /* TANGGAPAN */
+        const tanggapanSection = document.getElementById('tanggapanSection');
+        const tanggapanEl = document.getElementById('modalTanggapan');
+        
+        if (data.tanggapan && data.tanggapan.trim() !== '') {
+            tanggapanEl.textContent = data.tanggapan;
+            tanggapanSection.style.display = 'block';
+        } else {
+            tanggapanSection.style.display = 'none';
         }
 
         detailModal.classList.add('active');

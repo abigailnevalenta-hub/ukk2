@@ -56,16 +56,18 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn edit" data-id="{{ $kategori->id }}"
-                                    data-nama="{{ $kategori->nama_kategori }}"
-                                    data-deskripsi="{{ $kategori->deskripsi ?? '' }}">
+                                <a href="{{ route('kategori.edit', $kategori->id) }}" class="action-btn edit">
                                     <i class="fas fa-edit"></i>
-                                </button>
+                                </a>
 
-                                <button class="action-btn delete" data-id="{{ $kategori->id }}"
-                                    data-nama="{{ $kategori->nama_kategori }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="action-btn delete" data-id="{{ $kategori->id }}"
+                                        data-nama="{{ $kategori->nama_kategori }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
