@@ -16,7 +16,7 @@ class DashboardController extends Controller
             $query->where(function ($q) use ($request) {
                 $q->where('pelapor', 'like', '%' . $request->search . '%')
                   ->orWhere('nisn', 'like', '%' . $request->search . '%')
-                  ->orWhere('lokasi', 'like', '%' . $request->search . '%')
+                  ->orWhere('kelas', 'like', '%' . $request->search . '%')
                   ->orWhere('sarana', 'like', '%' . $request->search . '%');
             });
         }
@@ -48,13 +48,15 @@ class DashboardController extends Controller
         $pending = Pengaduan::where('status', 'Menunggu')->count();
         $review = Pengaduan::where('status', 'Diperbaiki')->count();
         $completed = Pengaduan::where('status', 'Selesai')->count();
+        $rejected = Pengaduan::where('status', 'Ditolak')->count();
 
         return view('dashboard.dashboard', compact(
             'pengaduans',
             'total',
             'pending',
             'review',
-            'completed'
+            'completed',
+            'rejected'
         ));
     }
 }

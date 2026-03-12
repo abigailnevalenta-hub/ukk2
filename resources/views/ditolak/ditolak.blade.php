@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Menunggu Proses - PSS')
+@section('title', 'Ditolak - PSS')
 
-@section('header_title', 'Menunggu Proses')
-@section('header_subtitle', 'Halaman Menunggu Proses (comment test placeholder).')
+@section('header_title', 'Proses Penolakan')
+@section('header_subtitle', 'Halaman Proses Penolakan (comment test placeholder).')
 
 @section('content')
     <section class="filter-section">
-        <form method="GET" action="{{ route('menunggu') }}">
+        <form method="GET" action="{{ route('ditolak') }}">
             <div class="filter-container">
 
                 <div class="filter-item">
@@ -62,19 +62,16 @@
             </div>
         </form>
     </section>
-
     <section class="table-section">
         <div class="table-header">
             <h3>Laporan Pengaduan Terbaru</h3>
-            <div class="header-controls">
-                <form method="GET" action="{{ route('menunggu') }}">
-                    <div class="search-wrapper">
-                        <i class="fas fa-search"></i>
-                        <input type="text" name="search" class="search-box" placeholder="Search here..."
-                            value="{{ request('search') }}">
-                    </div>
-                </form>
-            </div>
+            <form method="GET" action="{{ route('ditolak') }}">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="search" class="search-box" placeholder="Search here..."
+                        value="{{ request('search') }}">
+                </div>
+            </form>
         </div>
         <table>
             <thead>
@@ -102,7 +99,7 @@
                         <td>{{ $item->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($item->detail ?? '-', 100) }}</td>
                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                       <td>
+                         <td>
                             @if ($item->status == 'Menunggu')
                                 <span class="status-pending">Menunggu</span>
                             @elseif($item->status == 'Diperbaiki')
@@ -141,7 +138,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr>
+                     <tr>
                         <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Data pengaduan tidak ditemukan
                         </td>
                     </tr>

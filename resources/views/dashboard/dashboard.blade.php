@@ -90,7 +90,7 @@
 
                     </select>
                 </div>
-                
+
                 <div class="filter-action">
                     <button type="submit" class="filter-btn">
                         Terapkan
@@ -147,6 +147,8 @@
                                 <span class="status-review">Diperbaiki</span>
                             @elseif($item->status == 'Selesai')
                                 <span class="status-completed">Selesai</span>
+                            @elseif($item->status == 'Ditolak')
+                                <span class="status-rejected">Ditolak</span>
                             @else
                                 <span class="status-pending">{{ $item->status }}</span>
                             @endif
@@ -161,18 +163,23 @@
                                     data-tanggal="{{ $item->created_at->format('d F Y') }}">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button class="action-btn edit" title="Edit" data-id="{{ $item->id }}"
-                                    data-nisn="{{ $item->nisn }}" data-pelapor="{{ $item->pelapor }}"
-                                    data-kelas="{{ $item->kelas }}" data-sarana="{{ $item->sarana }}"
-                                    data-lokasi="{{ $item->lokasi }}" data-detail="{{ $item->detail }}"
-                                    data-status="{{ $item->status }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete" title="Hapus" data-id="{{ $item->id }}"
-                                    data-nisn="{{ $item->nisn }}" data-sarana="{{ $item->sarana }}"
-                                    data-lokasi="{{ $item->lokasi }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+
+                                @if (auth()->user()->role == 'admin')
+                                    <button class="action-btn edit" data-id="{{ $item->id }}"
+                                        data-nisn="{{ $item->nisn }}" data-pelapor="{{ $item->pelapor }}"
+                                        data-kelas="{{ $item->kelas }}" data-sarana="{{ $item->sarana }}"
+                                        data-lokasi="{{ $item->lokasi }}" data-detail="{{ $item->detail }}"
+                                        data-status="{{ $item->status }}" data-tanggapan="{{ $item->tanggapan ?? '' }}"
+                                        data-tanggal="{{ $item->created_at->format('d F Y') }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <button class="action-btn delete" title="Hapus" data-id="{{ $item->id }}"
+                                        data-nisn="{{ $item->nisn }}" data-sarana="{{ $item->sarana }}"
+                                        data-lokasi="{{ $item->lokasi }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -201,53 +208,66 @@
 
 @push('scripts')
     <script>
-        // View button functionality
-        document.querySelectorAll('.action-btn.view').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const viewData = {
-                    id: this.getAttribute('data-id'),
-                    nisn: this.getAttribute('data-nisn'),
-                    pelapor: this.getAttribute('data-pelapor'),
-                    kelas: this.getAttribute('data-kelas'),
-                    sarana: this.getAttribute('data-sarana'),
-                    lokasi: this.getAttribute('data-lokasi'),
-                    detail: this.getAttribute('data-detail') || '-',
-                    tanggal: this.getAttribute('data-tanggal'),
-                    status: this.getAttribute('data-status')
-                };
-                window.openDetailModal(viewData);
+        document.addEventListener("DOMContentLoaded", function() {
+            // VIEW
+            document.querySelectorAll('.action-btn.view').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const viewData = {
+                        id: this.dataset.id,
+                        nisn: this.dataset.nisn,
+                        pelapor: this.dataset.pelapor,
+                        kelas: this.dataset.kelas,
+                        sarana: this.dataset.sarana,
+                        lokasi: this.dataset.lokasi,
+                        detail: this.dataset.detail || '-',
+                        tanggal: this.dataset.tanggal,
+                        status: this.dataset.status
+                    };
+                    if (window.openDetailModal) {
+                        window.openDetailModal(viewData);
+                    }
+                });
             });
-        });
 
-        // Edit button functionality
-        document.querySelectorAll('.action-btn.edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                const editData = {
-                    nisn: this.getAttribute('data-nisn'),
-                    pelapor: this.getAttribute('data-pelapor'),
-                    kelas: this.getAttribute('data-kelas'),
-                    sarana: this.getAttribute('data-sarana'),
-                    lokasi: this.getAttribute('data-lokasi'),
-                    detail: this.getAttribute('data-detail') || '',
-                    action: `/pengaduan/${id}`
-                };
-                window.openEditModal(editData);
-            });
-        });
+            // EDIT
+            document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
 
-        // Delete button functionality
-        document.querySelectorAll('.action-btn.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                const deleteData = {
-                    nisn: this.getAttribute('data-nisn'),
-                    sarana: this.getAttribute('data-sarana'),
-                    lokasi: this.getAttribute('data-lokasi'),
-                    action: `/pengaduan/${id}`
-                };
-                window.openDeleteModal(deleteData);
+                    const editData = {
+                        nisn: this.dataset.nisn,
+                        pelapor: this.dataset.pelapor,
+                        kelas: this.dataset.kelas,
+                        sarana: this.dataset.sarana,
+                        lokasi: this.dataset.lokasi,
+                        detail: this.dataset.detail || '',
+                        action: `/pengaduan/${id}`
+                    };
+
+                    if (window.openEditModal) {
+                        window.openEditModal(editData);
+                    }
+                });
             });
+
+            // DELETE
+            document.querySelectorAll('.action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+
+                    const deleteData = {
+                        nisn: this.dataset.nisn,
+                        sarana: this.dataset.sarana,
+                        lokasi: this.dataset.lokasi,
+                        action: `/pengaduan/${id}`
+                    };
+
+                    if (window.openDeleteModal) {
+                        window.openDeleteModal(deleteData);
+                    }
+                });
+            });
+
         });
     </script>
 @endpush

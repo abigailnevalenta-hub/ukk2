@@ -28,6 +28,8 @@ Route::get('/menunggu', [App\Http\Controllers\PengaduanController::class, 'menun
 
 Route::get('/diperbaiki', [App\Http\Controllers\PengaduanController::class, 'diperbaiki'])->name('diperbaiki');
 
+Route::get('/ditolak', [App\Http\Controllers\PengaduanController::class, 'ditolak'])->name('ditolak');
+
 Route::get('/selesai', [App\Http\Controllers\PengaduanController::class, 'selesai'])->name('selesai');
 
 Route::get('/dashboard-siswa', [App\Http\Controllers\DashboardSiswaController::class, 'index'])->name('dashboardSiswa')->middleware('auth', 'role:user');

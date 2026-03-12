@@ -40,6 +40,12 @@
             @endif
 
             @if (auth()->user()->role === 'admin')
+                <li class="{{ request()->routeIs('ditolak') ? 'active' : '' }}">
+                    <a href="{{ route('ditolak') }}" class="menu-link"><i class="fas fa-times"></i>Ditolak</a>
+                </li>
+            @endif
+
+            @if (auth()->user()->role === 'admin')
                 <li class="{{ request()->routeIs('selesai') ? 'active' : '' }}">
                     <a href="{{ route('selesai') }}" class="menu-link"><i class="fas fa-check-circle"></i>Selesai</a>
                 </li>

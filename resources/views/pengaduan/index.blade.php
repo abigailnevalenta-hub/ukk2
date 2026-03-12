@@ -112,14 +112,20 @@
                         <td>{{ $neva->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($neva->detail ?? '-', 100) }}</td>
                         <td>{{ $neva->created_at->format('d/m/Y') }}</td>
-                        <td>
+                        
+                            <td>
                             @if ($neva->status == 'Menunggu')
-                                <span class="status-pending">{{ $neva->status }}</span>
-                            @elseif($neva->status == 'Diperbaiki' || $neva->status == 'Diperbaiki')
-                                <span class="status-review">{{ $neva->status }}</span>
+                                <span class="status-pending">Menunggu</span>
+                            @elseif($neva->status == 'Diperbaiki')
+                                <span class="status-review">Diperbaiki</span>
+                            @elseif($neva->status == 'Selesai')
+                                <span class="status-completed">Selesai</span>
+                            @elseif($neva->status == 'Ditolak')
+                                <span class="status-rejected">Ditolak</span>
                             @else
-                                <span class="status-completed">{{ $neva->status }}</span>
+                                <span class="status-pending">{{ $neva->status }}</span>
                             @endif
+                        </td>
                         </td>
                         <td>
                             <div class="action-buttons">
@@ -134,8 +140,13 @@
                                 
                             @if(auth()->user()->role == 'admin')
                                 <button class="action-btn tanggapan" data-id="{{ $neva->id }}" 
-                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}">
+                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
+                                    title="{{ !empty($neva->tanggapan) ? 'Edit Tanggapan' : 'Beri Tanggapan' }}"
+                                    style="position: relative;">
                                     <i class="fas fa-reply"></i> 
+                                    @if(!empty($neva->tanggapan))
+                                        <i class="fas fa-check-circle" style="position: absolute; top: -5px; right: -5px; font-size: 10px; color: #10b981; background: white; border-radius: 50%;"></i>
+                                    @endif
                                 </button>
 
                                 <button class="action-btn edit" data-id="{{ $neva->id }}"
@@ -214,6 +225,8 @@
                             <option value="Menunggu">Menunggu</option>
                             <option value="Diperbaiki">Diperbaiki</option>
                             <option value="Selesai">Selesai</option>
+                            <option value="Ditolak">Ditolak</option>
+
                         </select>
                     </div>
                     
@@ -231,6 +244,7 @@
             </div>
         </div>
     </div>
+
 @endpush
 
 @push('scripts')
@@ -351,7 +365,9 @@
             })
             .then(response => {
                 console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 return response.json();
             })
             .then(data => {
@@ -397,7 +413,7 @@
         align-items: center;
         gap: 6px;
         padding: 8px 12px;
-        border: 1px solid var(--border-color);
+        border: none;
         border-radius: 8px;
         background: var(--bg-card);
         color: var(--text-main);
@@ -415,14 +431,11 @@
     }
     
     .action-btn.view {
-        border-color: #3b82f6;
-        color: #3b82f6;
+        border-color: #4ECDC4;
+        color: #4ECDC4;
     }
     
-    .action-btn.view:hover {
-        background: #3b82f6;
-        color: white;
-    }
+    
     
     .action-btn.tanggapan {
         border-color: #10b981;
@@ -430,34 +443,17 @@
         background: linear-gradient(135deg, #ecfdf5, #d1fae5);
     }
     
-    .action-btn.tanggapan:hover {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        border-color: #059669;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-    }
-    
     .action-btn.edit {
         border-color: #f59e0b;
         color: #f59e0b;
     }
     
-    .action-btn.edit:hover {
-        background: #f59e0b;
-        color: white;
-    }
-    
+ 
     .action-btn.delete {
         border-color: #ef4444;
         color: #ef4444;
     }
-    
-    .action-btn.delete:hover {
-        background: #ef4444;
-        color: white;
-    }
-    
+ 
     .action-btn i {
         font-size: 11px;
     }
@@ -616,130 +612,6 @@
         background: linear-gradient(135deg, #059669, #047857);
         transform: translateY(-2px);
         box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
-    }
-    
-    /* Modal Styling */
-    .modal {
-        position: fixed !important;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .modal[style*="flex"] {
-        display: flex !important;
-    }
-    
-    .modal-content {
-        background: var(--bg-card);
-        border-radius: 20px;
-        width: 90%;
-        max-width: 500px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid var(--border-color);
-        animation: modalSlideIn 0.3s ease-out;
-    }
-    
-    @keyframes modalSlideIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9) translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-    
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 24px;
-        border-bottom: 1px solid var(--border-color);
-        background: linear-gradient(135deg, var(--bg-card), var(--bg-body));
-        border-radius: 20px 20px 0 0;
-    }
-    
-    .modal-header h3 {
-        margin: 0;
-        color: var(--text-main);
-        font-size: 18px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .modal-header h3::before {
-        content: "💬";
-        font-size: 20px;
-    }
-    
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: var(--text-muted);
-    }
-    
-    .modal-body {
-        padding: 24px;
-    }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--text-main);
-        font-weight: 600;
-        font-size: 14px;
-    }
-    
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid var(--border-color);
-        border-radius: 10px;
-        background: var(--bg-input);
-        color: var(--text-main);
-        font-size: 14px;
-        transition: all 0.2s ease;
-    }
-    
-    .form-group select:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-    
-    .form-group textarea {
-        resize: vertical;
-        min-height: 100px;
-        font-family: inherit;
-    }
-    
-    .modal-actions {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-        margin-top: 24px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border-color);
     }
 </style>
 @endpush

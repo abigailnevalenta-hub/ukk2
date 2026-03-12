@@ -39,7 +39,6 @@ class KategoriController extends Controller
 
             return redirect()->route('kategori.index')
                 ->with('success', 'Kategori berhasil ditambahkan.');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->route('kategori.create')
                 ->withErrors($e->errors())
@@ -82,7 +81,6 @@ class KategoriController extends Controller
 
             return redirect()->route('kategori.index')
                 ->with('success', 'Kategori berhasil diperbarui.');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             $kategori = Kategori::findOrFail($id);
             return redirect()->route('kategori.edit', $id)
@@ -97,7 +95,7 @@ class KategoriController extends Controller
     public function destroy(string $id)
     {
         $kategori = Kategori::findOrFail($id);
-        
+
         // Check if kategori has related pengaduans
         if ($kategori->pengaduans()->count() > 0) {
             return redirect()->route('kategori.index')

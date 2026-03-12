@@ -6,29 +6,30 @@
 @section('header_subtitle', 'Daftar semua tanggapan pengaduan')
 
 @section('content')
-<div class="container">
-    <div class="page-header">
-        <h1 class="page-title">Daftar Tanggapan</h1>
-        <p class="page-description">
-            @if(auth()->user()->role === 'admin')
-                Semua tanggapan dari pengaduan yang telah dibalas
-            @else
-                Tanggapan dari pengaduan yang Anda buat
-            @endif
-        </p>
+<section class="table-section">
+    <div class="table-header">
+        <h3>Daftar Tanggapan</h3>
+        <div class="header-controls">
+            <form method="GET" action="{{ route('tanggapan') }}">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="search" class="search-box" placeholder="Search tanggapan..."
+                        value="{{ request('search') }}">
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="table-container">
-        <table class="data-table">
+    <table>
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Pelapor</th>
+                    <th>Nomor</th>
+                    <th>NISN</th>
+                    <th>Nama Pelapor</th>
                     <th>Status</th>
                     <th>Tanggapan</th>
                     <th>Tanggal</th>
                     @if(auth()->user()->role === 'admin')
-                    <th>Aksi</th>
+                    <th>Action</th>
                     @endif
                 </tr>
             </thead>
@@ -36,21 +37,15 @@
                 @forelse ($tanggapans as $index => $tanggapan)
                     <tr>
                         <td>{{ $tanggapans->firstItem() + $index }}</td>
-                        <td>
-                            <div class="user-info">
-                                <div class="user-name">{{ $tanggapan->pelapor }}</div>
-                                @if(auth()->user()->role === 'admin')
-                                <div class="user-nisn">NISN: {{ $tanggapan->nisn ?? '-' }}</div>
-                                @endif
-                            </div>
-                        </td>
+                        <td>{{ $tanggapan->nisn ?? '-' }}</td>
+                        <td>{{ $tanggapan->pelapor }}</td>
                         <td>
                             @if($tanggapan->status == 'Menunggu')
-                                <span class="status-badge status-pending">{{ $tanggapan->status }}</span>
+                                <span class="status-pending">{{ $tanggapan->status }}</span>
                             @elseif($tanggapan->status == 'Diperbaiki')
-                                <span class="status-badge status-progress">{{ $tanggapan->status }}</span>
+                                <span class="status-review">{{ $tanggapan->status }}</span>
                             @else
-                                <span class="status-badge status-completed">{{ $tanggapan->status }}</span>
+                                <span class="status-completed">{{ $tanggapan->status }}</span>
                             @endif
                         </td>
                         <td>
@@ -61,41 +56,40 @@
                                 @endif
                             </div>
                         </td>
-                        <td>{{ $tanggapan->updated_at->format('d/m/Y H:i') }}</td>
+                        <td>{{ $tanggapan->updated_at->format('d/m/Y') }}</td>
                         @if(auth()->user()->role === 'admin')
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn edit" data-id="{{ $tanggapan->id }}" data-tanggapan="{{ $tanggapan->tanggapan }}" data-status="{{ $tanggapan->status }}" onclick="editTanggapan(this)">
-                                    <i class="fas fa-edit"></i> Edit
+                                <button class="action-btn edit" title="Edit" data-id="{{ $tanggapan->id }}" data-nisn="{{ $tanggapan->nisn }}" data-pelapor="{{ $tanggapan->pelapor }}" data-status="{{ $tanggapan->status }}" data-tanggapan="{{ $tanggapan->tanggapan }}" onclick="showEditModal(this)">
+                                    <i class="fas fa-edit"></i>
                                 </button>
-                                <a href="{{ route('pengaduan.index') }}#{{ $tanggapan->id }}" class="action-btn view">
-                                    <i class="fas fa-eye"></i> Lihat
-                                </a>
+                                <button class="action-btn view" title="Lihat" data-id="{{ $tanggapan->id }}" data-nisn="{{ $tanggapan->nisn }}" data-pelapor="{{ $tanggapan->pelapor }}" data-status="{{ $tanggapan->status }}" data-tanggapan="{{ $tanggapan->tanggapan }}" data-tanggal="{{ $tanggapan->updated_at->format('d F Y') }}" onclick="showDetailModal(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
                         </td>
                         @endif
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ auth()->user()->role === 'admin' ? '6' : '5' }}" class="text-center">
-                            <div class="empty-state">
-                                <i class="fas fa-comments"></i>
-                                <p>Belum ada tanggapan</p>
-                                <small>@if(auth()->user()->role === 'admin') Belum ada pengaduan yang ditanggapi @else Belum ada tanggapan untuk pengaduan Anda @endif</small>
+                        <td colspan="{{ auth()->user()->role === 'admin' ? '7' : '6' }}" style="text-align: center; padding: 20px; color: #999;">
+                            <div style="padding: 40px;">
+                                <i class="fas fa-comments" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px; display: block;"></i>
+                                <p style="font-size: 18px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">Belum ada tanggapan</p>
+                                <small style="color: var(--text-muted);">@if(auth()->user()->role === 'admin') Belum ada pengaduan yang ditanggapi @else Belum ada tanggapan untuk pengaduan Anda @endif</small>
                             </div>
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-        </table>
+    </table>
 
-        @if($tanggapans->hasPages())
-        <div class="pagination-wrapper">
-            {{ $tanggapans->links() }}
-        </div>
-        @endif
+    @if($tanggapans->hasPages())
+    <div style="padding: 20px; display: flex; justify-content: center;">
+        {{ $tanggapans->links() }}
     </div>
-</div>
+    @endif
+</section>
 
 <!-- Modal untuk lihat tanggapan lengkap -->
 <div id="tanggapanModal" class="modal" style="display: none;">
@@ -110,98 +104,83 @@
     </div>
 </div>
 
+<!-- Modal untuk detail tanggapan -->
+<div id="detailModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Detail Tanggapan</h3>
+            <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="detail-content">
+                <div class="detail-row">
+                    <label>NISN:</label>
+                    <span id="detailNisn"></span>
+                </div>
+                <div class="detail-row">
+                    <label>Nama Pelapor:</label>
+                    <span id="detailPelapor"></span>
+                </div>
+                <div class="detail-row">
+                    <label>Status:</label>
+                    <span id="detailStatus"></span>
+                </div>
+                <div class="detail-row">
+                    <label>Tanggal:</label>
+                    <span id="detailTanggal"></span>
+                </div>
+                <div class="detail-row">
+                    <label>Tanggapan:</label>
+                    <div id="detailTanggapan"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal untuk edit tanggapan -->
+<div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Tanggapan</h3>
+            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form id="editForm" method="POST" action="">
+            @csrf
+            <div class="modal-body">
+                <div class="form-content">
+                    <div class="form-row">
+                        <label>NISN:</label>
+                        <input type="text" id="editNisn" readonly class="form-input readonly">
+                    </div>
+                    <div class="form-row">
+                        <label>Nama Pelapor:</label>
+                        <input type="text" id="editPelapor" readonly class="form-input readonly">
+                    </div>
+                    <div class="form-row">
+                        <label>Status:</label>
+                        <select id="editStatus" name="status" class="form-input">
+                            <option value="Menunggu">Menunggu</option>
+                            <option value="Diperbaiki">Diperbaiki</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Tanggapan:</label>
+                        <textarea id="editTanggapan" name="tanggapan" rows="4" class="form-input" placeholder="Masukkan tanggapan..."></textarea>
+                    </div>
+                    <input type="hidden" id="editId" name="id">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Batal</button>
+                <button type="submit" class="btn-save">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <style>
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.page-header {
-    margin-bottom: 30px;
-}
-
-.page-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--text-main, #1f2937);
-    margin-bottom: 8px;
-}
-
-.page-description {
-    color: var(--text-muted, #6b7280);
-    font-size: 16px;
-}
-
-.table-container {
-    background: var(--bg-card, #ffffff);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.data-table th {
-    background: var(--bg-table-head, #f9fafb);
-    padding: 16px;
-    text-align: left;
-    font-weight: 600;
-    color: var(--text-main, #374151);
-    border-bottom: 1px solid var(--border-color, #e5e7eb);
-}
-
-.data-table td {
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color, #f3f4f6);
-    vertical-align: top;
-}
-
-.data-table tr:hover {
-    background: var(--bg-body, #f9fafb);
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.user-name {
-    font-weight: 600;
-    color: var(--text-main, #374151);
-}
-
-.user-nisn {
-    font-size: 12px;
-    color: var(--text-muted, #9ca3af);
-}
-
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.status-pending {
-    background: #fef3c7;
-    color: #d97706;
-}
-
-.status-progress {
-    background: #dbeafe;
-    color: #2563eb;
-}
-
-.status-completed {
-    background: #d1fae5;
-    color: #059669;
-}
-
 .tanggapan-content {
     max-width: 300px;
     line-height: 1.5;
@@ -210,84 +189,186 @@
 .read-more-btn {
     background: none;
     border: none;
-    color: #3b82f6;
+    color: var(--primary);
     cursor: pointer;
     font-size: 12px;
     text-decoration: underline;
     margin-top: 4px;
+    transition: color 0.2s;
 }
 
 .read-more-btn:hover {
-    color: #2563eb;
+    color: var(--primary-hover);
 }
 
-.action-buttons {
+.detail-content {
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.action-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 6px;
-    background: var(--bg-card, #ffffff);
-    color: var(--text-main, #374151);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
+.detail-row {
+    display: flex;
+    flex-direction: column;
     gap: 4px;
 }
 
-.action-btn:hover {
-    background: var(--bg-body, #f3f4f6);
-    transform: translateY(-1px);
-}
-
-.action-btn.edit {
-    border-color: #f59e0b;
-    color: #f59e0b;
-}
-
-.action-btn.edit:hover {
-    background: #f59e0b;
-    color: white;
-}
-
-.action-btn.view {
-    border-color: #3b82f6;
-    color: #3b82f6;
-}
-
-.action-btn.view:hover {
-    background: #3b82f6;
-    color: white;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted, #6b7280);
-}
-
-.empty-state i {
-    font-size: 48px;
-    margin-bottom: 16px;
-    display: block;
-}
-
-.empty-state p {
-    font-size: 18px;
+.detail-row label {
     font-weight: 600;
-    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.pagination-wrapper {
-    padding: 20px;
+.detail-row span,
+.detail-row div {
+    color: var(--text-main);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.detail-row .status-completed,
+.detail-row .status-pending,
+.detail-row .status-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.detail-row .status-completed {
+    background-color: #d1fae5; /* Light green background */
+    color: #059669; /* Dark green text */
+}
+
+.detail-row .status-completed::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #059669;
+    display: inline-block;
+}
+
+.detail-row .status-pending {
+    background-color: #fef3c7; /* Light yellow background */
+    color: #d97706; /* Orange text */
+}
+
+.detail-row .status-pending::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d97706;
+    display: inline-block;
+}
+
+.detail-row .status-review {
+    background-color: #dbeafe; /* Light blue background */
+    color: #2563eb; /* Blue text */
+}
+
+.detail-row .status-review::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2563eb;
+    display: inline-block;
+}
+
+/* Form Styles */
+.form-content {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-main);
+    background: var(--bg-input);
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.form-input.readonly {
+    background: var(--bg-body);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: var(--bg-card);
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel {
+    background: var(--bg-body);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+    background: var(--border-color);
+}
+
+.btn-save {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-save:hover {
+    background: var(--primary-hover);
 }
 
 /* Modal Styles */
@@ -305,25 +386,27 @@
 }
 
 .modal-content {
-    background: var(--bg-card, #ffffff);
-    border-radius: 12px;
+    background: var(--bg-card);
+    border-radius: 16px;
     width: 90%;
     max-width: 500px;
     max-height: 80vh;
     overflow-y: auto;
+    box-shadow: var(--shadow-hover);
 }
 
 .modal-header {
     padding: 20px;
-    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: var(--bg-card);
 }
 
 .modal-header h3 {
     margin: 0;
-    color: var(--text-main, #374151);
+    color: var(--text-main);
 }
 
 .modal-close {
@@ -331,7 +414,19 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: var(--text-muted, #6b7280);
+    color: var(--text-muted);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.modal-close:hover {
+    background: var(--bg-body);
 }
 
 .modal-body {
@@ -340,23 +435,10 @@
 
 .tanggapan-full {
     line-height: 1.6;
-    color: var(--text-main, #374151);
+    color: var(--text-main);
 }
 
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .data-table {
-        font-size: 14px;
-    }
-    
-    .data-table th,
-    .data-table td {
-        padding: 12px 8px;
-    }
-    
     .tanggapan-content {
         max-width: 200px;
     }
@@ -364,6 +446,11 @@
     .action-buttons {
         flex-direction: column;
         gap: 4px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10px;
     }
 }
 </style>
@@ -379,6 +466,66 @@ function closeTanggapanModal() {
     document.getElementById('tanggapanModal').style.display = 'none';
 }
 
+function showDetailModal(button) {
+    const id = button.getAttribute('data-id');
+    const nisn = button.getAttribute('data-nisn');
+    const pelapor = button.getAttribute('data-pelapor');
+    const status = button.getAttribute('data-status');
+    const tanggapan = button.getAttribute('data-tanggapan');
+    const tanggal = button.getAttribute('data-tanggal');
+    
+    // Set modal content
+    document.getElementById('detailNisn').textContent = nisn || '-';
+    document.getElementById('detailPelapor').textContent = pelapor;
+    document.getElementById('detailTanggal').textContent = tanggal;
+    document.getElementById('detailTanggapan').textContent = tanggapan || '-';
+    
+    // Set status with proper styling
+    const statusElement = document.getElementById('detailStatus');
+    statusElement.textContent = status;
+    statusElement.className = '';
+    
+    if (status === 'Menunggu') {
+        statusElement.className = 'status-pending';
+    } else if (status === 'Diperbaiki') {
+        statusElement.className = 'status-review';
+    } else {
+        statusElement.className = 'status-completed';
+    }
+    
+    // Show modal
+    document.getElementById('detailModal').style.display = 'flex';
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').style.display = 'none';
+}
+
+function showEditModal(button) {
+    const id = button.getAttribute('data-id');
+    const nisn = button.getAttribute('data-nisn');
+    const pelapor = button.getAttribute('data-pelapor');
+    const status = button.getAttribute('data-status');
+    const tanggapan = button.getAttribute('data-tanggapan');
+    
+    // Set form values
+    document.getElementById('editId').value = id;
+    document.getElementById('editNisn').value = nisn || '-';
+    document.getElementById('editPelapor').value = pelapor;
+    document.getElementById('editStatus').value = status;
+    document.getElementById('editTanggapan').value = tanggapan || '';
+    
+    // Set form action
+    document.getElementById('editForm').action = `/pengaduan/${id}/tanggapan`;
+    
+    // Show modal
+    document.getElementById('editModal').style.display = 'flex';
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
 function editTanggapan(button) {
     const id = button.getAttribute('data-id');
     const tanggapan = button.getAttribute('data-tanggapan');
@@ -388,10 +535,75 @@ function editTanggapan(button) {
     window.location.href = `/pengaduan#${id}`;
 }
 
-// Close modal when clicking outside
+// Handle form submission
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const id = formData.get('id');
+    
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': formData.get('_token'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            status: formData.get('status'),
+            tanggapan: formData.get('tanggapan')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            closeEditModal();
+            // Show success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Tanggapan berhasil diperbarui',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            // Reload page after 2 seconds
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: data.message || 'Terjadi kesalahan'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: 'Terjadi kesalahan saat menyimpan tanggapan'
+        });
+    });
+});
+
+// Close modals when clicking outside
 document.getElementById('tanggapanModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeTanggapanModal();
+    }
+});
+
+document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDetailModal();
+    }
+});
+
+document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEditModal();
     }
 });
 </script>

@@ -7,19 +7,18 @@
 
 @section('content')
     <!-- Flash Messages -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+      @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
 
     <section class="table-section">
         <div class="table-header">
@@ -47,6 +46,7 @@
             <tbody>
                 @forelse($kategoris as $index => $kategori)
                     <tr>
+                        
                         <td>{{ $kategoris->firstItem() + $index }}</td>
                         <td>
                             <strong>{{ $kategori->nama_kategori }}</strong>

@@ -21,9 +21,11 @@
                                 <i class="#"></i> NISN
                             </label>
                             @if (auth()->user()->role === 'user')
-                            <input type="text" id="modalnisnLaporan" name="nisn" value="{{ Auth::user()->nisn }}" readonly class="input-readonly">
+                                <input type="text" id="modalnisnLaporan" name="nisn"
+                                    value="{{ Auth::user()->nisn }}" readonly class="input-readonly">
                             @else
-                            <input type="text" id="modalnisnLaporan" name="nisn" placeholder="Masukkan NISN" required>
+                                <input type="text" id="modalnisnLaporan" name="nisn" placeholder="Masukkan NISN"
+                                    required>
                             @endif
                             <span class="field-hint">NISN tidak dapat diubah</span>
                         </div>
@@ -32,9 +34,11 @@
                                 <i class="#"></i> Nama Pelapor
                             </label>
                             @if (auth()->user()->role === 'user')
-                            <input type="text" id="editPelapor" name="pelapor" value="{{ Auth::user()->name }}" readonly class="input-readonly">
+                                <input type="text" id="editPelapor" name="pelapor" value="{{ Auth::user()->name }}"
+                                    readonly class="input-readonly">
                             @else
-                            <input type="text" id="editPelapor" name="pelapor" placeholder="Nama Pelapor" readonly>
+                                <input type="text" id="editPelapor" name="pelapor" placeholder="Nama Pelapor"
+                                    readonly>
                             @endif
                         </div>
                     </div>
@@ -71,8 +75,9 @@
                             </label>
                             <select id="editSarana" name="sarana" required>
                                 <option value="" disabled>Pilih kategori sarana...</option>
-                                @foreach($kategoris ?? \App\Models\Kategori::all() as $kategori)
-                                <option value="{{ $kategori->nama_kategori }}">{{ $kategori->nama_kategori }}</option>
+                                @foreach ($kategoris ?? \App\Models\Kategori::all() as $kategori)
+                                    <option value="{{ $kategori->nama_kategori }}">{{ $kategori->nama_kategori }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -90,11 +95,14 @@
                                     <option value="Menunggu">Menunggu</option>
                                     <option value="Diperbaiki">Diperbaiki</option>
                                     <option value="Selesai">Selesai</option>
+                                    <option value="Ditolak">Ditolak</option>
                                 </select>
                             </div>
                         </div>
+                    @endif
 
-                        <!-- Row 4: Tanggapan -->
+
+                    {{-- <!-- Row 4: Tanggapan -->
                         <div class="edit-row edit-row-full">
                             <div class="edit-field">
                                 <label for="editTanggapan">
@@ -102,8 +110,8 @@
                                 </label>
                                 <textarea id="editTanggapan" name="tanggapan" placeholder="Berikan tanggapan untuk laporan ini..."></textarea>
                             </div>
-                        </div>
-                    @endif
+                        </div> --}}
+
 
                     <!-- Row 4: Lokasi -->
                     <div class="edit-row edit-row-full">
@@ -511,6 +519,8 @@
                 justify-content: center;
             }
         }
+
+   
     </style>
 
     <script>

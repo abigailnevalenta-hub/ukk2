@@ -86,7 +86,6 @@
                     <th>Detail</th>
                     <th>Tanggal Lapor</th>
                     <th>Status</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,30 +110,7 @@
                                 <span class="status-pending">{{ $item->status }}</span>
                             @endif
                         </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn view" title="Lihat Detail" data-id="{{ $item->id }}"
-                                    data-nisn="{{ $item->nisn }}" data-pelapor="{{ $item->pelapor }}"
-                                    data-kelas="{{ $item->kelas }}" data-sarana="{{ $item->sarana }}"
-                                    data-lokasi="{{ $item->lokasi }}" data-detail="{{ $item->detail }}"
-                                    data-status="{{ $item->status }}"
-                                    data-tanggal="{{ $item->created_at->format('d F Y') }}">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="action-btn edit" title="Edit" data-id="{{ $item->id }}"
-                                    data-nisn="{{ $item->nisn }}" data-pelapor="{{ $item->pelapor }}"
-                                    data-kelas="{{ $item->kelas }}" data-sarana="{{ $item->sarana }}"
-                                    data-lokasi="{{ $item->lokasi }}" data-detail="{{ $item->detail }}"
-                                    data-status="{{ $item->status }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete" title="Hapus" data-id="{{ $item->id }}"
-                                    data-nisn="{{ $item->nisn }}" data-sarana="{{ $item->sarana }}"
-                                    data-lokasi="{{ $item->lokasi }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
+
                     </tr>
                 @empty
                     <tr>

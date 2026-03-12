@@ -47,13 +47,15 @@ class DashboardSiswaController extends Controller
         $pending = Pengaduan::where('nisn', $nisn)->where('status', 'Menunggu')->count();
         $review = Pengaduan::where('nisn', $nisn)->where('status', 'Diperbaiki')->count();
         $completed = Pengaduan::where('nisn', $nisn)->where('status', 'Selesai')->count();
+        $rejected = Pengaduan::where('nisn', $nisn)->where('status', 'Ditolak')->count();
 
         return view('dashboardSiswa.index', compact(
             'pengaduans',
             'total',
             'pending',
             'review',
-            'completed'
+            'completed',
+            'rejected'
         ));
     }
 }

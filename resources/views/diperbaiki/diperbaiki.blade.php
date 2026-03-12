@@ -99,13 +99,15 @@
                         <td>{{ $item->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($item->detail ?? '-', 100) }}</td>
                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                        <td>
+                         <td>
                             @if ($item->status == 'Menunggu')
                                 <span class="status-pending">Menunggu</span>
                             @elseif($item->status == 'Diperbaiki')
                                 <span class="status-review">Diperbaiki</span>
                             @elseif($item->status == 'Selesai')
                                 <span class="status-completed">Selesai</span>
+                            @elseif($item->status == 'Ditolak')
+                                <span class="status-rejected">Ditolak</span>
                             @else
                                 <span class="status-pending">{{ $item->status }}</span>
                             @endif
