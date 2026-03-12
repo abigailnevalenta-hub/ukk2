@@ -35,6 +35,15 @@
             </div>
         </a>
 
+            <a href="{{ route('ditolak') }}" class="card-link">
+                <div class="card">
+                    <div class="card-icon rejected"><i class="fas fa-times-circle"></i></div>
+                    <h3>Ditolak</h3>
+                    <p style="font-size: 28px; font-weight: 700;">{{ $rejected }} Laporan</p>
+                    <div class="card-desc">Ditolak oleh admin</div>
+                </div>
+            </a>
+
         <a href="{{ route('selesai') }}" class="card-link">
             <div class="card">
                 <div class="card-icon completed"><i class="fas fa-check-circle"></i></div>
@@ -128,6 +137,7 @@
                 @endforelse
             </tbody>
         </table>
+        
     </section>
 @endsection
 

@@ -25,12 +25,22 @@
             </div>
         </a>
 
+
         <a href="{{ route('diperbaiki') }}" class="card-link">
             <div class="card">
                 <div class="card-icon review"><i class="fas fa-tools"></i></div>
                 <h3>Diperbaiki</h3>
                 <p style="font-size: 28px; font-weight: 700;">{{ $review }} Laporan</p>
                 <div class="card-desc">Dalam proses perbaikan</div>
+            </div>
+        </a>
+
+         <a href="{{ route('ditolak') }}" class="card-link">
+            <div class="card">
+                <div class="card-icon rejected"><i class="fas fa-times-circle"></i></div>
+                <h3>Ditolak</h3>
+                <p style="font-size: 28px; font-weight: 700;">{{ $rejected }} Laporan</p>
+                <div class="card-desc">Ditolak oleh admin</div>
             </div>
         </a>
 

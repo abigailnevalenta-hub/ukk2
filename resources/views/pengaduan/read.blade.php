@@ -72,6 +72,10 @@
 
                     <div class="detail-photo">
                         <img id="modalFoto" src="" alt="Foto Pengaduan">
+                        <div id="noFotoMessage" style="text-align: center; color: #9CA3AF; padding: 20px; display: none;">
+                            <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px;"></i>
+                            <p>Tidak ada foto yang diupload</p>
+                        </div>
                     </div>
 
                 </div>
@@ -281,12 +285,19 @@
 
         /* FOTO */
         const fotoEl = document.getElementById('modalFoto');
+        const noFotoMessage = document.getElementById('noFotoMessage');
 
-        if (data.foto) {
+        if (data.foto && data.foto.trim() !== '') {
             fotoEl.src = data.foto;
             fotoEl.style.display = 'block';
+            noFotoMessage.style.display = 'none';
+            fotoEl.onerror = function() {
+                this.style.display = 'none';
+                noFotoMessage.style.display = 'block';
+            };
         } else {
             fotoEl.style.display = 'none';
+            noFotoMessage.style.display = 'block';
         }
 
         /* STATUS */
@@ -299,6 +310,8 @@
             statusEl.classList.add('status-pending');
         } else if (data.status === 'Proses' || data.status === 'Diperbaiki') {
             statusEl.classList.add('status-repair');
+        } else if (data.status === 'Ditolak') {
+            statusEl.classList.add('status-rejected');
         } else {
             statusEl.classList.add('status-done');
         }

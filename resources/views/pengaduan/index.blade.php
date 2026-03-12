@@ -133,6 +133,7 @@
                                     data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                    data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
                                     data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
                                     data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-eye"></i>
@@ -153,6 +154,7 @@
                                     data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                    data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
                                     data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
                                     data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-edit"></i>
@@ -170,6 +172,7 @@
                                     data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
                                     data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
                                     data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                    data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
                                     data-status="{{ $neva->status }}"
                                     data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-edit"></i>
@@ -193,6 +196,7 @@
                 @endforelse
             </tbody>
         </table>
+        
     </section>
 @endsection
 
@@ -260,6 +264,7 @@
                     sarana: this.getAttribute('data-sarana'),
                     lokasi: this.getAttribute('data-lokasi'),
                     detail: this.getAttribute('data-detail') || '-',
+                    foto: this.getAttribute('data-foto') || '',
                     tanggal: this.getAttribute('data-tanggal'),
                     status: this.getAttribute('data-status')
                 };
@@ -278,6 +283,7 @@
                     sarana: this.getAttribute('data-sarana'),
                     lokasi: this.getAttribute('data-lokasi'),
                     detail: this.getAttribute('data-detail') || '',
+                    foto: this.getAttribute('data-foto') || '',
                     action: `/pengaduan/${id}`
                 };
                 window.openEditModal(editData);

@@ -663,6 +663,11 @@
                 display: inline-block;
             }
 
+            .card-icon.rejected {
+                background: #FFEDEE;
+                color: #FF4D4F;
+            }
+
             /* Actions */
             .action-buttons {
                 display: flex;
@@ -814,7 +819,13 @@
                         <button class="icon-btn">
                             <i class="fas fa-bell"></i>
                         </button>
-                        <div class="profile-avatar">AB</div>
+                        <div class="profile-avatar">
+                            @if(auth()->user()->role === 'admin')
+                                Admin
+                            @else
+                                {{ auth()->user()->name ?? auth()->user()->nisn }}
+                            @endif
+                        </div>
                     </div>
                 </header>
 

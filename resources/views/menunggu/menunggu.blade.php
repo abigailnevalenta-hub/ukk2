@@ -148,6 +148,7 @@
                 @endforelse
             </tbody>
         </table>
+        
     </section>
 @endsection
 
