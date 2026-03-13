@@ -168,6 +168,14 @@
                 <label for="nisn">NISN</label>
                 <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN Anda" pattern="\d{10}" title="NISN terdiri dari 10 angka">
             </div>
+
+            <div class="form-group">
+                <label for="password-siswa">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password-siswa" name="password" placeholder="Masukkan password">
+                    <i class="fa-solid fa-eye toggle-password" id="toggle-siswa"></i>
+                </div>
+            </div>
             <button type="submit" class="login-btn">Login sebagai Siswa</button>
         </form>
 

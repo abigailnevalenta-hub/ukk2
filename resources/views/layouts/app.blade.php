@@ -358,9 +358,15 @@
 
             .filter-container {
                 display: grid;
-                grid-template-columns: repeat(4, 1fr) auto;
+                grid-template-columns: repeat(5, 1fr);
                 gap: 16px;
                 align-items: end;
+                margin-bottom: 16px;
+            }
+
+            .filter-action-wrapper {
+                display: flex;
+                justify-content: flex-end;
             }
 
             .filter-item {

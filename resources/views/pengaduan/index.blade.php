@@ -7,62 +7,70 @@
 
 @section('content')
     @if (auth()->user()->role === 'admin')
-    <section class="filter-section">
-        <form method="GET" action="{{ route('pengaduan.index') }}">
-            <div class="filter-container">
+        <section class="filter-section">
+            <form method="GET" action="{{ route('pengaduan.index') }}">
+                <div class="filter-container">
 
-                <div class="filter-item">
-                    <label>Tanggal</label>
-                    <input type="date" name="tanggal" class="filter-input">
+                    <div class="filter-item">
+                        <label>Tanggal Mulai</label>
+                        <input type="date" name="tanggal_mulai" class="filter-input" value="{{ request('tanggal_mulai') }}">
+                    </div>
+
+                    <div class="filter-item">
+                        <label>Tanggal Akhir</label>
+                        <input type="date" name="tanggal_akhir" class="filter-input"
+                            value="{{ request('tanggal_akhir') }}">
+                    </div>
+
+                    <div class="filter-item">
+                        <label>Bulan</label>
+                        <select name="bulan" class="filter-input">
+                            <option value="">Semua Bulan</option>
+                            <option value="1">Januari</option>
+                            <option value="2">Februari</option>
+                            <option value="3">Maret</option>
+                            <option value="4">April</option>
+                            <option value="5">Mei</option>
+                            <option value="6">Juni</option>
+                            <option value="7">Juli</option>
+                            <option value="8">Agustus</option>
+                            <option value="9">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-item">
+                        <label>Siswa</label>
+                        <input type="text" name="siswa" placeholder="Cari nama siswa..." class="filter-input">
+                    </div>
+
+                    <div class="filter-item">
+                        <label>Kategori Sarana</label>
+                        <select name="kategori" class="filter-input">
+                            <option value="">Semua Kategori</option>
+
+                            @foreach ($kategoris ?? \App\Models\Kategori::all() as $kategori)
+                                <option value="{{ $kategori->nama_kategori }}">
+                                    {{ $kategori->nama_kategori }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
                 </div>
 
-                <div class="filter-item">
-                    <label>Bulan</label>
-                    <select name="bulan" class="filter-input">
-                        <option value="">Semua Bulan</option>
-                        <option value="1">Januari</option>
-                        <option value="2">Februari</option>
-                        <option value="3">Maret</option>
-                        <option value="4">April</option>
-                        <option value="5">Mei</option>
-                        <option value="6">Juni</option>
-                        <option value="7">Juli</option>
-                        <option value="8">Agustus</option>
-                        <option value="9">September</option>
-                        <option value="10">Oktober</option>
-                        <option value="11">November</option>
-                        <option value="12">Desember</option>
-                    </select>
+                <div class="filter-action-wrapper">
+                    <div class="filter-action">
+                        <button type="submit" class="filter-btn">
+                            Terapkan
+                        </button>
+                    </div>
                 </div>
-
-                <div class="filter-item">
-                    <label>Siswa</label>
-                    <input type="text" name="siswa" placeholder="Cari nama siswa..." class="filter-input">
-                </div>
-
-                <div class="filter-item">
-                    <label>Kategori Sarana</label>
-                    <select name="kategori" class="filter-input">
-                        <option value="">Semua Kategori</option>
-
-                        @foreach ($kategoris ?? \App\Models\Kategori::all() as $kategori)
-                            <option value="{{ $kategori->nama_kategori }}">
-                                {{ $kategori->nama_kategori }}
-                            </option>
-                        @endforeach
-
-                    </select>
-                </div>
-                
-                <div class="filter-action">
-                    <button type="submit" class="filter-btn">
-                        Terapkan
-                    </button>
-                </div>
-
-            </div>
-        </form>
-    </section>
+            </form>
+        </section>
     @endif
 
     <section class="table-section">
@@ -112,8 +120,8 @@
                         <td>{{ $neva->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($neva->detail ?? '-', 100) }}</td>
                         <td>{{ $neva->created_at->format('d/m/Y') }}</td>
-                        
-                            <td>
+
+                        <td>
                             @if ($neva->status == 'Menunggu')
                                 <span class="status-pending">Menunggu</span>
                             @elseif($neva->status == 'Diperbaiki')
@@ -138,53 +146,70 @@
                                     data-tanggal="{{ $neva->created_at->format('d F Y') }}">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                
-                            @if(auth()->user()->role == 'admin')
-                                <button class="action-btn tanggapan" data-id="{{ $neva->id }}" 
-                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
-                                    title="{{ !empty($neva->tanggapan) ? 'Edit Tanggapan' : 'Beri Tanggapan' }}"
-                                    style="position: relative;">
-                                    <i class="fas fa-reply"></i> 
-                                    @if(!empty($neva->tanggapan))
-                                        <i class="fas fa-check-circle" style="position: absolute; top: -5px; right: -5px; font-size: 10px; color: #10b981; background: white; border-radius: 50%;"></i>
-                                    @endif
-                                </button>
 
-                                <button class="action-btn edit" data-id="{{ $neva->id }}"
-                                    data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
-                                    data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
-                                    data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
-                                    data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
-                                    data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
-                                    data-tanggal="{{ $neva->created_at->format('d F Y') }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                                @if (auth()->user()->role == 'admin')
+                                    <button class="action-btn tanggapan" data-id="{{ $neva->id }}"
+                                        data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
+                                        title="{{ !empty($neva->tanggapan) ? 'Edit Tanggapan' : 'Beri Tanggapan' }}"
+                                        style="position: relative;">
+                                        <i class="fas fa-reply"></i>
+                                        @if (!empty($neva->tanggapan))
+                                            <i class="fas fa-check-circle"
+                                                style="position: absolute; top: -5px; right: -5px; font-size: 10px; color: #10b981; background: white; border-radius: 50%;"></i>
+                                        @endif
+                                    </button>
 
-                                <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
-                                    data-nisn="{{ $neva->nisn }}" data-sarana="{{ $neva->sarana }}"
-                                    data-lokasi="{{ $neva->lokasi }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            @endif
-                            
-                            @if(auth()->user()->role == 'user')
-                                <button class="action-btn edit" data-id="{{ $neva->id }}"
-                                    data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
-                                    data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
-                                    data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
-                                    data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
-                                    data-status="{{ $neva->status }}"
-                                    data-tanggal="{{ $neva->created_at->format('d F Y') }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                                    <button class="action-btn edit" data-id="{{ $neva->id }}"
+                                        data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
+                                        data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
+                                        data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                        data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
+                                        data-status="{{ $neva->status }}" data-tanggapan="{{ $neva->tanggapan ?? '' }}"
+                                        data-tanggal="{{ $neva->created_at->format('d F Y') }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
 
-                                <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
-                                    data-nisn="{{ $neva->nisn }}" data-sarana="{{ $neva->sarana }}"
-                                    data-lokasi="{{ $neva->lokasi }}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            @endif
+                                    <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
+                                        data-nisn="{{ $neva->nisn }}" data-sarana="{{ $neva->sarana }}"
+                                        data-lokasi="{{ $neva->lokasi }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                @endif
+
+                                @if (auth()->user()->role == 'user')
+                                    <button class="action-btn edit" data-id="{{ $neva->id }}"
+                                        data-nisn="{{ $neva->nisn }}" data-pelapor="{{ $neva->pelapor }}"
+                                        data-kelas="{{ $neva->kelas }}" data-sarana="{{ $neva->sarana }}"
+                                        data-lokasi="{{ $neva->lokasi }}" data-detail="{{ $neva->detail }}"
+                                        data-foto="{{ $neva->foto ? asset('storage/fotos/' . $neva->foto) : '' }}"
+                                        data-status="{{ $neva->status }}"
+                                        data-tanggal="{{ $neva->created_at->format('d F Y') }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <button class="action-btn delete" title="Hapus" data-id="{{ $neva->id }}"
+                                        data-nisn="{{ $neva->nisn }}" data-sarana="{{ $neva->sarana }}"
+                                        data-lokasi="{{ $neva->lokasi }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                @endif
                             </div>
+                            @if (auth()->user()->role == 'admin')
+                                @if (!empty($neva->tanggapan))
+                                    <div style="text-align: left; margin-top: 4px; margin-left: 8px;">
+                                        <span style="font-size: 10px; color: #10b981; font-weight: 600;">
+                                            <i class="fas fa-check-circle" style="font-size: 8px;"></i> Tanggapan sudah
+                                            ada
+                                        </span>
+                                    </div>
+                                @else
+                                    <div style="text-align: left; margin-top: 4px; margin-left: 8px;">
+                                        <span style="font-size: 10px; color: #FFB23D; font-weight: 600;">
+                                            Belum ada tanggapan yang dikirim
+                                        </span>
+                                    </div>
+                                @endif
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -196,7 +221,7 @@
                 @endforelse
             </tbody>
         </table>
-        
+
     </section>
 @endsection
 
@@ -222,7 +247,7 @@
                     @csrf
                     @method('PUT')
                     <input type="hidden" id="tanggapanId" name="pengaduan_id">
-                    
+
                     <div class="form-group">
                         <label for="tanggapanStatus">Status Laporan</label>
                         <select id="tanggapanStatus" name="status" required>
@@ -233,13 +258,13 @@
 
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tanggapanText">Tanggapan</label>
-                        <textarea id="tanggapanText" name="tanggapan" rows="4" 
-                            placeholder="Berikan tanggapan untuk laporan ini..." required></textarea>
+                        <textarea id="tanggapanText" name="tanggapan" rows="4" placeholder="Berikan tanggapan untuk laporan ini..."
+                            required></textarea>
                     </div>
-                    
+
                     <div class="modal-actions">
                         <button type="button" class="btn cancel" onclick="closeTanggapanModal()">Batal</button>
                         <button type="submit" class="btn submit">Simpan Tanggapan</button>
@@ -248,7 +273,6 @@
             </div>
         </div>
     </div>
-
 @endpush
 
 @push('scripts')
@@ -330,24 +354,28 @@
         // Tanggapan form submit
         document.getElementById('tanggapanForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const id = document.getElementById('tanggapanId').value;
             const status = document.getElementById('tanggapanStatus').value;
             const tanggapan = document.getElementById('tanggapanText').value;
-            
-            console.log('Submitting tanggapan:', { id, status, tanggapan });
-            
+
+            console.log('Submitting tanggapan:', {
+                id,
+                status,
+                tanggapan
+            });
+
             const submitBtn = this.querySelector('.btn.submit');
             const originalText = submitBtn.innerHTML;
-            
+
             // Loading state
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
             submitBtn.disabled = true;
-            
+
             // Get CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             console.log('CSRF Token:', csrfToken);
-            
+
             if (!csrfToken) {
                 console.error('CSRF token not found!');
                 alert('CSRF token not found. Please refresh the page.');
@@ -355,270 +383,270 @@
                 submitBtn.disabled = false;
                 return;
             }
-            
+
             fetch(`/pengaduan/${id}/tanggapan`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: status,
-                    tanggapan: tanggapan,
-                    _method: 'PUT'
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        status: status,
+                        tanggapan: tanggapan,
+                        _method: 'PUT'
+                    })
                 })
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Response data:', data);
-                
-                if (data.success) {
-                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Berhasil!';
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response data:', data);
+
+                    if (data.success) {
+                        submitBtn.innerHTML = '<i class="fas fa-check"></i> Berhasil!';
+                        setTimeout(() => {
+                            closeTanggapanModal();
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        throw new Error(data.message || 'Gagal menyimpan tanggapan');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    submitBtn.innerHTML = '<i class="fas fa-exclamation"></i> Gagal!';
                     setTimeout(() => {
-                        closeTanggapanModal();
-                        location.reload();
-                    }, 1000);
-                } else {
-                    throw new Error(data.message || 'Gagal menyimpan tanggapan');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                submitBtn.innerHTML = '<i class="fas fa-exclamation"></i> Gagal!';
-                setTimeout(() => {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }, 2000);
-                
-                // Tampilkan error message
-                alert(error.message || 'Terjadi kesalahan saat menyimpan tanggapan');
-            });
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 2000);
+
+                    // Tampilkan error message
+                    alert(error.message || 'Terjadi kesalahan saat menyimpan tanggapan');
+                });
         });
     </script>
 @endpush
 
 
 @push('styles')
-<style>
-    /* Action Buttons Styling */
-    .action-buttons {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-    
-    .action-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 8px;
-        background: var(--bg-card);
-        color: var(--text-main);
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        white-space: nowrap;
-    }
-    
-    .action-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .action-btn.view {
-        border-color: #4ECDC4;
-        color: #4ECDC4;
-    }
-    
-    
-    
-    .action-btn.tanggapan {
-        border-color: #10b981;
-        color: #10b981;
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    }
-    
-    .action-btn.edit {
-        border-color: #f59e0b;
-        color: #f59e0b;
-    }
-    
- 
-    .action-btn.delete {
-        border-color: #ef4444;
-        color: #ef4444;
-    }
- 
-    .action-btn i {
-        font-size: 11px;
-    }
-    
-    /* Modal Styling */
-    .modal {
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .modal-content {
-        background: var(--bg-card);
-        border-radius: 20px;
-        width: 90%;
-        max-width: 500px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid var(--border-color);
-        animation: modalSlideIn 0.3s ease-out;
-    }
-    
-    @keyframes modalSlideIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9) translateY(-20px);
+    <style>
+        /* Action Buttons Styling */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-    
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 24px;
-        border-bottom: 1px solid var(--border-color);
-        background: linear-gradient(135deg, var(--bg-card), var(--bg-body));
-        border-radius: 20px 20px 0 0;
-    }
-    
-    .modal-header h3 {
-        margin: 0;
-        color: var(--text-main);
-        font-size: 18px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .modal-header h3::before {
-        content: "💬";
-        font-size: 20px;
-    }
-    
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: var(--text-muted);
-    }
-    
-    .modal-body {
-        padding: 24px;
-    }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--text-main);
-        font-weight: 600;
-        font-size: 14px;
-    }
-    
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid var(--border-color);
-        border-radius: 10px;
-        background: var(--bg-input);
-        color: var(--text-main);
-        font-size: 14px;
-        transition: all 0.2s ease;
-    }
-    
-    .form-group select:focus,
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-    
-    .form-group textarea {
-        resize: vertical;
-        min-height: 100px;
-        font-family: inherit;
-    }
-    
-    .modal-actions {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-        margin-top: 24px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border-color);
-    }
-    
-    .btn {
-        padding: 12px 24px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .btn.cancel {
-        background: var(--bg-table-head);
-        color: var(--text-sidebar);
-        border: 1px solid var(--border-color);
-    }
-    
-    .btn.cancel:hover {
-        background: var(--bg-body);
-        transform: translateY(-1px);
-    }
-    
-    .btn.submit {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        border: 1px solid #10b981;
-    }
-    
-    .btn.submit:hover {
-        background: linear-gradient(135deg, #059669, #047857);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
-    }
-</style>
-@endpush
 
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn.view {
+            border-color: #4ECDC4;
+            color: #4ECDC4;
+        }
+
+
+
+        .action-btn.tanggapan {
+            border-color: #10b981;
+            color: #10b981;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        }
+
+        .action-btn.edit {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+
+
+        .action-btn.delete {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .action-btn i {
+            font-size: 11px;
+        }
+
+        /* Modal Styling */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-body));
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-header h3::before {
+            content: "💬";
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-input);
+            color: var(--text-main);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn.cancel {
+            background: var(--bg-table-head);
+            color: var(--text-sidebar);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn.cancel:hover {
+            background: var(--bg-body);
+            transform: translateY(-1px);
+        }
+
+        .btn.submit {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: 1px solid #10b981;
+        }
+
+        .btn.submit:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+@endpush

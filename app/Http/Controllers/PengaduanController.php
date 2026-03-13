@@ -133,8 +133,13 @@ class PengaduanController extends Controller
     {
         $query = Pengaduan::where('status', 'Menunggu');
 
-        if ($request->tanggal) {
-            $query->whereDate('tanggal', $request->tanggal);
+        // FILTER TANGGAL RANGE
+        if ($request->tanggal_mulai && $request->tanggal_akhir) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
+        } elseif ($request->tanggal_mulai) {
+            $query->whereDate('tanggal', '>=', $request->tanggal_mulai);
+        } elseif ($request->tanggal_akhir) {
+            $query->whereDate('tanggal', '<=', $request->tanggal_akhir);
         }
 
         if ($request->bulan) {

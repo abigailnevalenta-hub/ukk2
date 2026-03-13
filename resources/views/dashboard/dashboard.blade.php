@@ -53,6 +53,72 @@
         </a>
     </section>
 
+        @if (auth()->user()->role === 'admin')
+    <section class="filter-section">
+        <form method="GET" action="{{ route('dashboard') }}">
+            <div class="filter-container">
+
+                <div class="filter-item">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="tanggal_mulai" class="filter-input" value="{{ request('tanggal_mulai') }}">
+                </div>
+
+                <div class="filter-item">
+                    <label>Tanggal Akhir</label>
+                    <input type="date" name="tanggal_akhir" class="filter-input" value="{{ request('tanggal_akhir') }}">
+                </div>
+
+                <div class="filter-item">
+                    <label>Bulan</label>
+                    <select name="bulan" class="filter-input">
+                        <option value="">Semua Bulan</option>
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+
+                <div class="filter-item">
+                    <label>Siswa</label>
+                    <input type="text" name="siswa" placeholder="Cari nama siswa..." class="filter-input">
+                </div>
+
+                <div class="filter-item">
+                    <label>Kategori Sarana</label>
+                    <select name="kategori" class="filter-input">
+                        <option value="">Semua Kategori</option>
+
+                        @foreach ($kategoris ?? \App\Models\Kategori::all() as $kategori)
+                            <option value="{{ $kategori->nama_kategori }}">
+                                {{ $kategori->nama_kategori }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+            </div>
+            
+            <div class="filter-action-wrapper">
+                <div class="filter-action">
+                    <button type="submit" class="filter-btn">
+                        Terapkan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+    @endif
+
 
     <section class="table-section">
         <div class="table-header">
@@ -125,6 +191,17 @@
                                 </button>
 
                                 @if (auth()->user()->role == 'admin')
+                                    <!-- TANGGAPAN -->
+                                    <button class="action-btn tanggapan" data-id="{{ $item->id }}" 
+                                        data-status="{{ $item->status }}" data-tanggapan="{{ $item->tanggapan ?? '' }}"
+                                        title="{{ !empty($item->tanggapan) ? 'Edit Tanggapan' : 'Beri Tanggapan' }}"
+                                        style="position: relative;">
+                                        <i class="fas fa-reply"></i>
+                                        @if(!empty($item->tanggapan))
+                                            <i class="fas fa-check-circle" style="position: absolute; top: -5px; right: -5px; font-size: 10px; color: #10b981; background: white; border-radius: 50%;"></i>
+                                        @endif
+                                    </button>
+
                                     <!-- EDIT -->
                                     <button class="action-btn edit" data-id="{{ $item->id }}"
                                         data-nisn="{{ $item->nisn }}" data-pelapor="{{ $item->pelapor }}"
@@ -143,6 +220,21 @@
                                     </button>
                                 @endif
                             </div>
+                            @if (auth()->user()->role == 'admin')
+                                @if(!empty($item->tanggapan))
+                                    <div style="text-align: left; margin-top: 4px; margin-left: 8px;">
+                                        <span style="font-size: 10px; color: #10b981; font-weight: 600;">
+                                            <i class="fas fa-check-circle" style="font-size: 8px;"></i> Tanggapan sudah ada
+                                        </span>
+                                    </div>
+                                @else
+                                    <div style="text-align: left; margin-top: 4px; margin-left: 8px;">
+                                        <span style="font-size: 10px; color: #FFB23D; font-weight: 600;">
+                                            Belum ada tanggapan yang dikirim
+                                        </span>
+                                    </div>
+                                @endif
+                            @endif
                         </td>
                     </tr>
 

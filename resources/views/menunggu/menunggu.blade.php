@@ -11,8 +11,13 @@
             <div class="filter-container">
 
                 <div class="filter-item">
-                    <label>Tanggal</label>
-                    <input type="date" name="tanggal" class="filter-input">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" name="tanggal_mulai" class="filter-input" value="{{ request('tanggal_mulai') }}">
+                </div>
+
+                <div class="filter-item">
+                    <label>Tanggal Akhir</label>
+                    <input type="date" name="tanggal_akhir" class="filter-input" value="{{ request('tanggal_akhir') }}">
                 </div>
 
                 <div class="filter-item">
@@ -52,13 +57,15 @@
 
                     </select>
                 </div>
-                
+
+            </div>
+
+            <div class="filter-action-wrapper">
                 <div class="filter-action">
                     <button type="submit" class="filter-btn">
                         Terapkan
                     </button>
                 </div>
-
             </div>
         </form>
     </section>
@@ -102,7 +109,7 @@
                         <td>{{ $item->lokasi }}</td>
                         <td>{{ \Illuminate\Support\Str::limit($item->detail ?? '-', 100) }}</td>
                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                       <td>
+                        <td>
                             @if ($item->status == 'Menunggu')
                                 <span class="status-pending">Menunggu</span>
                             @elseif($item->status == 'Diperbaiki')
@@ -142,13 +149,14 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Data pengaduan tidak ditemukan
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #999;">Data pengaduan tidak
+                            ditemukan
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-        
+
     </section>
 @endsection
 

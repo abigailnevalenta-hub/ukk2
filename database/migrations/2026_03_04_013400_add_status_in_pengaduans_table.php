@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('pengaduans', function (Blueprint $table) {
             if(!Schema::hasColumn('pengaduans', 'status')) {
-                $table->enum('status', ['menunggu', 'diperbaiki', 'selesai'])->default('menunggu')->after('lokasi');
+                $table->enum('status', ['menunggu', 'diperbaiki', 'selesai', 'ditolak'])->default('menunggu')->after('lokasi');
             }
         });
     }
